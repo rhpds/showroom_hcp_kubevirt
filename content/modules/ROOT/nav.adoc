@@ -1,8 +1,26 @@
 
-* xref:module-02.adoc[1. RPM Native Container]
-** xref:module-02.adoc#repositories[Repositories]
-** xref:module-02.adoc#software[Software]
+* xref:module-01.adoc[1. Introduction]
+** xref:module-01.adoc#hcp[Hosted Control Planes]
+** xref:module-01.adoc#ocpv[OpenShift Virtualization]
+** xref:module-01.adoc#prerequisites[Prerequisites]
 
-* xref:module-03.adoc[2. GitHub Sourced Container]
-** xref:module-03.adoc#prerequisites[Install Prerequisites]
-** xref:module-03.adoc#container[Enable Container]
+* xref:module-02.adoc[2. Review the environment]
+** xref:module-02.adoc#acm[Review Advanced Cluster Management]
+** xref:module-02.adoc#ocpv[Review OpenShift Virtualization]
+
+* xref:module-03.adoc[3. Creating a hosted cluster]
+** xref:module-03.adoc#cli[Install CLI]
+** xref:module-03.adoc#create[Create Hosted Cluster]
+** xref:module-03.adoc#create[Review Hosted Cluster]
+
+* xref:module-04.adoc[4. Scale hosted cluster]
+** xref:module-04.adoc#addnode[Add new node]
+** xref:module-04.adoc#addnodepool[Add a node pool]
+
+* xref:module-05.adoc[5. Storage configuration]
+** xref:module-05.adoc#storage[Storage]
+** xref:module-05.adoc#caching[Image caching]
+
+* xref:module-06.adoc[6. Policies]
+** xref:module-06.adoc#storage[Introduction]
+** xref:module-06.adoc#caching[Authentication]
