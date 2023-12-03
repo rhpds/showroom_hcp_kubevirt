@@ -1,5 +1,5 @@
 name: modules
-title: Tony antora title
+title: Hosted Control Plane Clusters on OpenShift Virtualization
 version: master
 nav:
   - modules/ROOT/nav.adoc

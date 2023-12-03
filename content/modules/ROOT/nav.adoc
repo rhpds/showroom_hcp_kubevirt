@@ -2,6 +2,7 @@
 * xref:module-01.adoc[1. Introduction]
 ** xref:module-01.adoc#hcp[Hosted Control Planes]
 ** xref:module-01.adoc#ocpv[OpenShift Virtualization]
+** xref:module-01.adoc#acm[Advanced Cluster Management]
 ** xref:module-01.adoc#prerequisites[Prerequisites]
 
 * xref:module-02.adoc[2. Review the environment]
@@ -11,7 +12,7 @@
 * xref:module-03.adoc[3. Creating a hosted cluster]
 ** xref:module-03.adoc#cli[Install CLI]
 ** xref:module-03.adoc#create[Create Hosted Cluster]
-** xref:module-03.adoc#create[Review Hosted Cluster]
+** xref:module-03.adoc#review[Review Hosted Cluster]
 
 * xref:module-04.adoc[4. Scale hosted cluster]
 ** xref:module-04.adoc#addnode[Add new node]

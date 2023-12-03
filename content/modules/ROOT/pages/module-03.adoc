@@ -1,46 +1,120 @@
-= Managing an Application from GitHub
+= Creating a Hosted Cluster on OpenShift Virtualization
 
-In the first half of this workshop, we packaged an application into this portable container format manually using rpms.
-In the second half, we will consider that you may want to manage software from GitHub or some kind of software versioning application.
-Rather than installing rpms, we have individual software files and pull them out of that version control into a group of systems.
+You can use the hosted control plane command line interface, `hcp``, to create an *OpenShift Container Platform hosted cluster*. The hosted cluster is automatically imported as a managed cluster.
 
-== Install RHEL 8 UBI
+== Install CLI
 
-In this lab, we will be using a different Red Hat Enterprise Linux version in my container. 
-
-. Verify the host system release 
-
+. Connect to the bastion host
 +
 [source,bash]
 ----
-cat /etc/redhat-release
+[lab-user@hypervisor ~]$ sudo ssh root@192.168.123.100
 ----
-+ 
-NOTE: The `bastion` system is Red Hat Enterprise Linux 9, and when you built the previous container, you used the UBI9 image. This means both the image and the container were built off the same Red Hat Enterprise Linux packages. 
 
-. As we did previously in this lab, Use `buildah from` to pull down the Red Hat Enterprise Linux 8 UBI.
 
+. Download the cli called `hcp`
 +
 [source,bash]
 ----
-buildah from registry.access.redhat.com/ubi8/ubi
+[root@ocp4-bastion ~]# curl -O https://hcp-cli-download-multicluster-engine.apps.{guid}.dynamic.redhatworkshops.io/linux/amd64/hcp.tar.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 32.4M  100 32.4M    0     0   498M      0 --:--:-- --:--:-- --:--:--  498M
 ----
 
-NOTE: Because you already pulled one image named `ubi-working-container` this one is called `ubi-working-container-1`. 
-
-[#prerequisites]
-== Install Prerequisites
-
-Now that you have a working container, you will use the same process as before installing all the prerequisites, changing config files, and manipulating the contents of this container to be in the desired state.
-
-The software you will install is a JavaScript-based game that runs on a web browser. As before in the lab, use dnf to install software inside the container. 
-
-. Use `buildah run` and install Apache (`httpd`) into the `ubi-working-container-1` container. 
+. Extract the client
 +
 [source,bash]
 ----
-buildah run ubi-working-container-1 -- dnf -y install httpd
+[root@ocp4-bastion ~]# tar xvfz hcp.tar.gz -C /usr/local/bin/
 ----
+
+. Confirm the command `hcp` is available 
++
+[source,bash]
+----
+[root@ocp4-bastion ~]# hcp -v
+----
++
+.Sample Output
++
+[%nowrap]
+----
+hcp version openshift/hypershift: e87182ca75da37c74b371aa0f17aeaa41437561a. Latest supported OCP: 4.14.0
+----
+
+
+[#create]
+== Create Hosted Cluster
+
+Some considerations:
+
+* Run the hub cluster and workers on the same platform for hosted control planes.
+* Each hosted cluster must have a unique name in order for multicluster engine operator to manage it.
+* A hosted cluster cannot be created in the namespace of a multicluster engine operator managed cluster.
+
+TODO: login or generate .kube/config because of the new TLS
+
+. Create a new hosted cluster using the command `hcp`
++
+[source,bash]
+----
+[root@ocp4-bastion ~]# hcp create cluster kubevirt \
+--insecure-skip-tls-verify=true \
+--name cluster1 \
+--node-pool-replicas 2 \
+--pull-secret ~/pull-secret.json \
+--memory 6Gi \
+--cores 2
+----
++
+.Sample Output
++
+[%nowrap]
+----
+2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "Namespace", "namespace": "", "name": "clusters"}
+2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "Secret", "namespace": "clusters", "name": "cluster1-pull-secret"}
+2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "", "namespace": "clusters", "name": "cluster1"}
+2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "Secret", "namespace": "clusters", "name": "cluster1-etcd-encryption-key"}
+2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "NodePool", "namespace": "clusters", "name": "cluster1"}
+----
++
+[NOTE]
+You can use the --release-image flag to set up the hosted cluster with a specific OpenShift Container Platform release.
++
+A default node pool is created for the cluster with two virtual machine worker replicas according to the `--node-pool-replicas` flag.
+
+. Verify the host control plane pods running inside of the new namespace created (`clusters-cluster1`)
++
+[%nowrap]
+----
+[root@ocp4-bastion ~]# oc get pod -n clusters-cluster1
+----
++
+.Sample Output
++
+[%nowrap]
+----
+NAME                                      READY   STATUS    RESTARTS   AGE
+capi-provider-554c58b965-6cx78            1/1     Running   0          4m23s
+cluster-api-5f5b78d889-2tnqm              1/1     Running   0          4m24s
+control-plane-operator-67b7d4556b-4b4mq   1/1     Running   0          4m23s
+----
+
+. Check the status of the host clusters, querying the _Custom Resource_ named `HostedCluster`.
++
+[%nowrap]
+----
+[root@ocp4-bastion ~]# oc get --namespace clusters hostedclusters
+----
++
+.Sample Output
++
+[%nowrap]
+----
+----
+
+
 
 == Enable Service
 
