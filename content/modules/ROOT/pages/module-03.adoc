@@ -4,11 +4,19 @@ You can use the hosted control plane command line interface, `hcp``, to create a
 
 == Prerequisites
 
+. Connect to the bastion host
++
+[source,bash]
+----
+[lab-user@hypervisor ~]$ sudo ssh root@192.168.123.100
+----
+
+
 . Login to OCP
 +
 [source,bash,subs="attributes"]
 ----
-[root@ocp4-bastion ~]# oc login {ocp_api}:6443 --username={ocp_username} --password={ocp_password}
+[root@ocp4-bastion ~]# oc login {ocp_api} --username={ocp_username} --password={ocp_password}
 ----
 
 . Allow wildcard routes
@@ -22,19 +30,13 @@ You can use the hosted control plane command line interface, `hcp``, to create a
 
 == Install CLI
 
-. Connect to the bastion host
-+
-[source,bash]
-----
-[lab-user@hypervisor ~]$ sudo ssh root@192.168.123.100
-----
 
 
 
 
 . Download the cli called `hcp`
 +
-[source,bash]
+[source,bash,subs="attributes"]
 ----
 [root@ocp4-bastion ~]# curl -O https://hcp-cli-download-multicluster-engine.apps.{guid}.dynamic.redhatworkshops.io/linux/amd64/hcp.tar.gz
 ----
