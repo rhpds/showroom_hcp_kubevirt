@@ -16,6 +16,13 @@ oc patch ingresscontroller -n openshift-ingress-operator default --type=json -p 
 [lab-user@hypervisor ~]$ sudo ssh root@192.168.123.100
 ----
 
+. Login to OCP
++
+[source,bash]
+----
+[root@ocp4-bastion ~]# oc login {ocp_api}:6443 --username={ocp_username} --password={ocp_password}
+----
+
 
 . Download the cli called `hcp`
 +
