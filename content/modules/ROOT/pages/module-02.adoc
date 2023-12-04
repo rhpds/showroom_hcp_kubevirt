@@ -2,7 +2,7 @@
 
 == Login
 
-Login to {ocp_console} with the user {ocp_username} and the password {ocp_password}
+Login to {ocp_console}[window=_blank] with the user `{ocp_username}` and the password `{ocp_password}`
 
 [#acm]
 == Review ACM
