@@ -1,5 +1,9 @@
 = Review the environment
 
+== Login
+
+Login to {ocp_console} with the user {ocp_username} and the password {ocp_password}
+
 [#acm]
 == Review ACM
 
