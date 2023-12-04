@@ -4,7 +4,20 @@ You can use the hosted control plane command line interface, `hcp``, to create a
 
 == Prerequisites
 
-oc patch ingresscontroller -n openshift-ingress-operator default --type=json -p '[{ "op": "add", "path": "/spec/routeAdmission", "value": {wildcardPolicy: "WildcardsAllowed"}}]'
+. Login to OCP
++
+[source,bash,subs="attributes"]
+----
+[root@ocp4-bastion ~]# oc login {ocp_api}:6443 --username={ocp_username} --password={ocp_password}
+----
+
+. Allow wildcard routes
++
+[source,bash,subs="attributes"]
+----
+[root@ocp4-bastion ~]# oc patch ingresscontroller -n openshift-ingress-operator default --type=json -p '[{ "op": "add", "path": "/spec/routeAdmission", "value": {wildcardPolicy: "WildcardsAllowed"}}]'
+----
+
 
 
 == Install CLI
@@ -16,12 +29,7 @@ oc patch ingresscontroller -n openshift-ingress-operator default --type=json -p 
 [lab-user@hypervisor ~]$ sudo ssh root@192.168.123.100
 ----
 
-. Login to OCP
-+
-[source,bash]
-----
-[root@ocp4-bastion ~]# oc login {ocp_api}:6443 --username={ocp_username} --password={ocp_password}
-----
+
 
 
 . Download the cli called `hcp`
