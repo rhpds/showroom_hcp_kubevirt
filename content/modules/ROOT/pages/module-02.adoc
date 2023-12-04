@@ -7,7 +7,9 @@ Login to {ocp_console}[window=_blank] with the user `{ocp_username}` and the pas
 [#acm]
 == Review ACM
 
-TODO
+* Select, if is not selected, `local-cluster` on the top left menu
++
+image::../assets/images/01_ACM_Top_Level_Menu.png[]
 
 [#ocpv]
 == Review OpenShift Virtualization
