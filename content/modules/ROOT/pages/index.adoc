@@ -2,7 +2,7 @@
 
 This hands-on lab will provide you with instructions so you can deploy a Hosted cluster. 
 
-{guid}
+GUID: {guid}
 
 == Acronyms used in the lab
 
