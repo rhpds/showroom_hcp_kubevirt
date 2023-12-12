@@ -131,21 +131,47 @@ control-plane-operator-67b7d4556b-4b4mq   1/1     Running   0          4m23s
 +
 [%nowrap]
 ----
-NAME       VERSION   KUBECONFIG                  PROGRESS    AVAILABLE   PROGRESSING   MESSAGE
-cluster1   4.14.1    cluster1-admin-kubeconfig   Completed   True        False         The hosted control plane is available
+NAME       VERSION   KUBECONFIG                  PROGRESS   AVAILABLE   PROGRESSING   MESSAGE
+cluster1             cluster1-admin-kubeconfig   Partial    False       False         Waiting for Kube APIServer deployment to become available
 ----
 +
 [IMPORTANT]
-It takes some minutes till the cluster switches from Partial to Completes
+It takes some minutes till the cluster switches from Partial to Completed
+
+
+. Go back to the ACM Console (`All Clusters` in the top menu)
+. Notice the `cluster1` will appear automatically
++
+image::_images/Install/01_ACM_Review.png[]
+
+. Click on `cluster1` and check the progress
++
+image::_images/Install/02_ACM_Progress.png[]
+
+. Meantime the installation continues, check OpenShift Virtualization
+.. Select `local-cluster` in the top menu
+.. In the left menu navigate to *Virtualization* -> *Virtual Machines*
+.. Select project `clusters-cluster`
++
+image::_images/Install/03_OCPV_VMs.png[]
++
+Disks are imported automatically and the VMs starts. They will act as a workers for the hosted control planes cluster.
+
+TODO:
+Review Service, Route
+
+. Go back to *ACM* console and select `cluster1` and wait till the creation finishes.
+
 
 TODO:
 
-Check status on ACM
+Go to ACM, reveal credentials, connect to cluster
+
 
 hcp create kubeconfig --name cluster1 > cluster1-kubeconfig
 
 oc get co --kubeconfig=cluster1-kubeconfig
 
-Go to ACM, reveal credentials, connect to cluster
+
 
 Review cluster
