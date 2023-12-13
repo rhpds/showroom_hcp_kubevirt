@@ -2,17 +2,19 @@ name: modules
 title: Hosted Control Plane Clusters on OpenShift Virtualization
 version: master
 nav:
-  - modules/ROOT/nav.adoc
+- modules/ROOT/nav.adoc
 
 asciidoc:
   attributes:
+    lab_name: Hosted Control Plane Clusters on OpenShift Virtualization
     release-version: master
     page-pagination: true
+    experimental: true
     guid: my-guid
     ssh_user: devops
     ssh_password: devops
     ssh_command: ssh devops@bastion.{guid}.example.opentlc.com
 
   extensions:
-    - ./content/lib/tab-block.js
-    - ./content/lib/remote-include-processor.js
+  - ./content/lib/tab-block.js
+  - ./content/lib/remote-include-processor.js
