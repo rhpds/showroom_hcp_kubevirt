@@ -41,12 +41,17 @@ The _control plane_ runs as pods that are contained in a single namespace and is
 * Decreases the cluster creation time by removing the requirement for control plane node bootstrapping
 * Supports turn-key deployments or fully customized *OpenShift Container Platform* provisioning
 
+
+image::_images/architecture.png[]
+
+
 [#acm]
 == Red Hat Advanced Cluster Management for Kubernetes
 
 *Red Hat® Advanced Cluster Management for Kubernetes* controls clusters and applications from a single console, with built-in security policies. Extend the value of *Red Hat OpenShift* by deploying apps, managing multiple clusters, and enforcing policies across multiple clusters at scale. Red Hat's solution ensures compliance, monitors usage, and maintains consistency.
 
-TODO
+image::_images/rhacm.png[]
+
 
 
 [#ocpv]
@@ -73,10 +78,23 @@ An enhanced web console provides a graphical portal to manage these virtualized 
 
 [#prerequisites]
 
-== Prerequisites
-TODO
+== HCP Prerequisites for OpenShift Virtualization
+* The *OpenShift Container Platform* managed cluster must have wildcard DNS routes enabled
+* The *OpenShift Container Platform* managed cluster must have *OpenShift Virtualization*, version 4.14 or later, installed on it.
+* The *OpenShift Container Platform* managed cluster must be configured with *OVNKubernetes* as the default pod network CNI.
+* The *OpenShift Container Platform* managed cluster must have a *default storage class*.
+* You need a valid *pull secret file* for the `quay.io/openshift-release-dev repository``.
+* Before you can provision your cluster, you need to configure a load balancer. For example, *MetalLB*.
+* For optimal network performance, use a network maximum transmission unit (`MTU``) of 9000 or greater on the *OpenShift Container Platform* cluster that hosts the *OpenShift Virtualization* virtual machines.
 
 [#metallb]
 
 == MetalLB 
-TODO
+As a cluster administrator, you can add the *MetalLB Operator* to your cluster so that when a service of type `LoadBalancer` is added to the cluster, MetalLB can add an external IP address for the service. The external IP address is added to the host network for your cluster.
+
+* *MetalLB* operating in `layer2` mode provides support for failover by utilizing a mechanism similar to IP failover. However, instead of relying on the virtual router redundancy protocol (_VRRP_) and keepalived, *MetalLB* leverages a _gossip-based protocol_ to identify instances of node failure. When a failover is detected, another node assumes the role of the leader node, and a gratuitous _ARP_ message is dispatched to broadcast this change.
+
+* *MetalLB* operating in `layer3` or border gateway protocol (_BGP_) mode delegates failure detection to the network. The _BGP router_ or routers that the *OpenShift Container Platform* nodes have established a connection with will identify any node failure and terminate the routes to that node.
+
+Using *MetalLB* instead of _IP failover_ is preferable for ensuring high availability of pods and services.
+

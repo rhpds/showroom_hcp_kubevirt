@@ -72,9 +72,7 @@ Some considerations:
 * Each hosted cluster must have a unique name in order for multicluster engine operator to manage it.
 * A hosted cluster cannot be created in the namespace of a multicluster engine operator managed cluster.
 
-TODO: login or generate .kube/config because of the new TLS
-
-. Create a new hosted cluster using the command `hcp`
+. Create a new hosted cluster named _cluster1_ using the command `hcp`:
 +
 [source,bash]
 ----
@@ -136,7 +134,7 @@ cluster1             cluster1-admin-kubeconfig   Partial    False       False   
 ----
 +
 [IMPORTANT]
-It takes some minutes till the cluster switches from Partial to Completed
+It takes some minutes till the cluster switches from Partial to Completed. Don't wait.
 
 
 . Go back to the ACM Console (`All Clusters` in the top menu)
@@ -148,19 +146,42 @@ image::_images/Install/01_ACM_Review.png[]
 +
 image::_images/Install/02_ACM_Progress.png[]
 
+. Review the information and scroll down and wait till the status is `Pending import`.
+
 . Meantime the installation continues, check OpenShift Virtualization
 .. Select `local-cluster` in the top menu
 .. In the left menu navigate to *Virtualization* -> *Virtual Machines*
-.. Select project `clusters-cluster`
+.. Select project `clusters-cluster1`
 +
 image::_images/Install/03_OCPV_VMs.png[]
 +
-Disks are imported automatically and the VMs starts. They will act as a workers for the hosted control planes cluster.
+CoreOS disks are imported automatically and the VMs starts. They will act as a workers for the hosted control planes cluster.
 
-TODO:
-Review Service, Route
+
+. In the left menu navigate to *Networking* -> *Services*:
++
+image::_images/Install/04_OCPV_Services.png[]
++
+Notice the required services for a OpenShift are created inside the namespace for each cluster created.
+
+. Navigate to *Networking* -> *Services*:
++
+image::_images/Install/05_OCPV_Routes.png[]
++
+The routes to access from outside to the hosted cluster are listed.
+
+. Navigate to *Storage* -> *PersistentVolumeClaims*
++
+image::_images/Install/06_OCPV_PVCs.png[]
++
+Notice the etcd disk for the control planes are created. This disk are used on the control planes pods. It is recommended to use a low-latency and fast I/O disks for etcd to avoid issues.
 
 . Go back to *ACM* console and select `cluster1` and wait till the creation finishes.
++
+image::_images/Install/07_OCPV_Ready.png[]
++
+The cluster can be `Ready` but the workers still provisioning. Wait till the `Cluster node pools` section moves from `Pending` to `Ready`
+
 
 
 TODO:

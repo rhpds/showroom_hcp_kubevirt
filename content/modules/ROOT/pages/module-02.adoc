@@ -7,7 +7,7 @@ Login to {ocp_console}/dashboards[window=_blank] with the user `{ocp_username}` 
 [#acm]
 == Review ACM
 
-* Select, if is not selected, `local-cluster` on the top left menu
+* Select `local-cluster` on the top left menu
 +
 image::_images/Review/01_ACM_Top_Level_Menu.png[]
 
@@ -39,9 +39,9 @@ image::_images/Review/06_Close_Dialog.png[]
 +
 image::_images/Review/07_Cluster_List.png[]
 
-It is possible create clusters on different provides using the UI. As well it is possible to import an existing installed cluster.
+It is possible create clusters on different provides using the UI. As well it is possible to import an existing installed cluster. Press `local-cluster` and review the different tabs (_Overview_, _Nodes_, _Add-ons_).
 
-TO use *OpenShift Virtualization* the steps are using the CLI.
+To use *OpenShift Virtualization* the steps are using the CLI.
 
 
 [#ocpv]
