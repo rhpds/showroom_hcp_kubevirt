@@ -1,7 +1,5 @@
 = Introduction
 
-
-
 [#hcp]
 == Hosted Control Planes
 
@@ -32,7 +30,7 @@ The following table indicates which versions are supported for each platform:
 |4.14
 |===
 
-The _control plane_ runs as pods that are contained in a single namespace and is associated with the *hosted control plane cluster*. When *OpenShift Container Platform* creates this type of hosted cluster, it creates a _worker node_ that is independent of the _control plane_.
+The _control plane_ of the *hosted cluster* runs as pods in a single namespace on the *hosting cluster*. When *OpenShift Container Platform* creates this type of hosted cluster, it creates _worker nodes_ that are independent of the _control plane_.
 
 *Hosted control plane clusters* offer several advantages:
 
@@ -41,18 +39,16 @@ The _control plane_ runs as pods that are contained in a single namespace and is
 * Decreases the cluster creation time by removing the requirement for control plane node bootstrapping
 * Supports turn-key deployments or fully customized *OpenShift Container Platform* provisioning
 
-
 image::_images/architecture.png[]
-
 
 [#acm]
 == Red Hat Advanced Cluster Management for Kubernetes
 
-*Red Hat® Advanced Cluster Management for Kubernetes* controls clusters and applications from a single console, with built-in security policies. Extend the value of *Red Hat OpenShift* by deploying apps, managing multiple clusters, and enforcing policies across multiple clusters at scale. Red Hat's solution ensures compliance, monitors usage, and maintains consistency.
+*Red Hat® Advanced Cluster Management for Kubernetes* controls clusters and applications from a single console, with built-in security policies.
+
+Extend the value of *Red Hat OpenShift* by deploying apps, managing multiple clusters, and enforcing policies across multiple clusters at scale. Red Hat's solution ensures compliance, monitors usage, and maintains consistency.
 
 image::_images/rhacm.png[]
-
-
 
 [#ocpv]
 == OpenShift Virtualization
@@ -83,9 +79,9 @@ An enhanced web console provides a graphical portal to manage these virtualized 
 * The *OpenShift Container Platform* managed cluster must have *OpenShift Virtualization*, version 4.14 or later, installed on it.
 * The *OpenShift Container Platform* managed cluster must be configured with *OVNKubernetes* as the default pod network CNI.
 * The *OpenShift Container Platform* managed cluster must have a *default storage class*.
-* You need a valid *pull secret file* for the `quay.io/openshift-release-dev repository``.
+* You need a valid *pull secret file* for the `quay.io/openshift-release-dev` repository.
 * Before you can provision your cluster, you need to configure a load balancer. For example, *MetalLB*.
-* For optimal network performance, use a network maximum transmission unit (`MTU``) of 9000 or greater on the *OpenShift Container Platform* cluster that hosts the *OpenShift Virtualization* virtual machines.
+* For optimal network performance, use a network maximum transmission unit (`MTU`) of 9000 or greater on the *OpenShift Container Platform* cluster that hosts the *OpenShift Virtualization* virtual machines.
 
 [#metallb]
 

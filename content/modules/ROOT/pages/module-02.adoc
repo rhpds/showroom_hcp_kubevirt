@@ -31,7 +31,7 @@ Installation was done with default values. From version 2.9, it is not needed an
 +
 image::_images/Review/05_All_clusters.png[]
 
-* Close dialog appeared
+* Close the dialog window that appears by clicking on the `x` in the top right corner
 +
 image::_images/Review/06_Close_Dialog.png[]
 
@@ -39,10 +39,11 @@ image::_images/Review/06_Close_Dialog.png[]
 +
 image::_images/Review/07_Cluster_List.png[]
 
-It is possible create clusters on different provides using the UI. As well it is possible to import an existing installed cluster. Press `local-cluster` and review the different tabs (_Overview_, _Nodes_, _Add-ons_).
+It is possible to create clusters on different infrastructure provides using the UI. It is also possible to import existing clusters.
 
-To use *OpenShift Virtualization* the steps are using the CLI.
+Click on `local-cluster` and review the different tabs (_Overview_, _Nodes_, _Add-ons_).
 
+To use *OpenShift Virtualization* as the infrastructure for a new cluster it is necessary to use the CLI at this point.
 
 [#ocpv]
 == Review OpenShift Virtualization
