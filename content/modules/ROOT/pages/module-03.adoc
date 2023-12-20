@@ -11,11 +11,12 @@ You can use the hosted control plane command line interface, `hcp``, to create a
 sudo ssh root@192.168.123.100
 ----
 
+
 . Login to the OpenShift Cluster (your hosting cluster)
 +
 [source,bash,role=execute,subs="attributes"]
 ----
-oc login {ocp_api} --username={ocp_username} --password={ocp_password}
+oc login {ocp_api} --username={ocp_username} --password={ocp_password} --insecure-skip-tls-verify=true
 ----
 
 . Allow wildcard routes for your Ingress Controllers
