@@ -167,6 +167,8 @@ image::_images/Install/06_OCPV_PVCs.png[]
 +
 Notice that the *etcd* disks for the control plane are created. These disks are used for the control planes pods. It is recommended to use a low-latency and fast I/O disks for etcd to avoid issues.
 
+== Review creation
+
 . Go back to *ACM* console and select `cluster1` and wait until the cluster creation is complete.
 +
 image::_images/Install/07_OCPV_Ready.png[]
@@ -175,15 +177,83 @@ The cluster can be `Ready` but the worker nodes may still be provisioning - whic
 +
 Wait until the `Cluster node pools` section switches from `Pending` to `Ready`
 
+. Review the *Details* information of the cluster
++
+image::_images/Install/08_OCPV_Guest_Details.png[]
 
+. Click `Reval credentials` and copy the password for the `kubeadmin` user
 
-TODO:
+. Navigate to the `Console URL` and accept the self-signed certificate
 
-Go to ACM, reveal credentials, connect to cluster
+. Login to the new cluster with the credentials
++
+image::_images/Install/09_OCPV_Guest_Home.png[]
++
+Notice the `Infrastructure provider` is `KubeVirt`.
 
+. Navigate in the left menu to *Compute* -> *Nodes* and review the workers
++
+image::_images/Install/10_OCPV_Guest_Nodes.png[]
+
+. Navigate to the left menu to *Storage* -> *StorageClasses* 
++
+image::_images/Install/11_OCPV_Guest_StorageClass.png[]
++
+Storage Class is a _proxy_ to the host OpenShift Cluster storage class.
+
+== Review the cluster using the CLI
+
+It is possible download the `kubeconfig` using the UI interface and using the command `hcp.`
+
+. Generate the kubeconfig for the `cluster1` cluster
++
+[source,bash,role=execute]
+----
 hcp create kubeconfig --name cluster1 > cluster1-kubeconfig
+----
++
+.Sample Output
++
+[%nowrap]
+----
+NAME       VERSION   KUBECONFIG                  PROGRESS   AVAILABLE   PROGRESSING   MESSAGE
+cluster1             cluster1-admin-kubeconfig   Partial    False       False         Waiting for Kube APIServer deployment to become available
+----
 
+. Check the cluster operators status
++
+[source,bash,role=execute]
+----
 oc get co --kubeconfig=cluster1-kubeconfig
+----
++
+.Sample Output
++
+[%nowrap]
+----
+NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
+console                                    4.14.5    True        False         False      66m     
+csi-snapshot-controller                    4.14.5    True        False         False      72m     
+dns                                        4.14.5    True        False         False      67m     
+image-registry                             4.14.5    True        False         False      67m     
+ingress                                    4.14.5    True        False         False      66m     
+insights                                   4.14.5    True        False         False      67m     
+kube-apiserver                             4.14.5    True        False         False      72m     
+kube-controller-manager                    4.14.5    True        False         False      72m     
+kube-scheduler                             4.14.5    True        False         False      72m     
+kube-storage-version-migrator              4.14.5    True        False         False      67m     
+monitoring                                 4.14.5    True        False         False      65m     
+network                                    4.14.5    True        False         False      66m     
+node-tuning                                4.14.5    True        False         False      69m     
+openshift-apiserver                        4.14.5    True        False         False      72m     
+openshift-controller-manager               4.14.5    True        False         False      72m     
+openshift-samples                          4.14.5    True        False         False      66m     
+operator-lifecycle-manager                 4.14.5    True        False         False      72m     
+operator-lifecycle-manager-catalog         4.14.5    True        False         False      72m     
+operator-lifecycle-manager-packageserver   4.14.5    True        False         False      72m     
+service-ca                                 4.14.5    True        False         False      67m     
+storage                                    4.14.5    True        False         False      72m   
+----
 
 
-Review cluster
+
