@@ -1,138 +1,92 @@
-= Managing an Application from GitHub
+= Storage
 
-In the first half of this workshop, we packaged an application into this portable container format manually using rpms.
-In the second half, we will consider that you may want to manage software from GitHub or some kind of software versioning application.
-Rather than installing rpms, we have individual software files and pull them out of that version control into a group of systems.
+== Hosted Cluster storage
 
-== Install RHEL 8 UBI
+Using the UI create a PVC inside of the guest cluster (Ensure you are in the cluster `cluster1`)
 
-In this lab, we will be using a different Red Hat Enterprise Linux version in my container. 
-
-. Verify the host system release 
-
+. Navigate to *Storage* -> *PersistentVolumeClaims*
 +
-[source,bash]
-----
-cat /etc/redhat-release
-----
-+ 
-NOTE: The `bastion` system is Red Hat Enterprise Linux 9, and when you built the previous container, you used the UBI9 image. This means both the image and the container were built off the same Red Hat Enterprise Linux packages. 
+image::_images/Storage/01_PVC_Menu.png[]
 
-. As we did previously in this lab, Use `buildah from` to pull down the Red Hat Enterprise Linux 8 UBI.
+. Press `Create PersistentVolumeClaim` on the top-right 
 
+. Fill with the name `pvc01` and the size `1 GiB`
 +
-[source,bash]
-----
-buildah from registry.access.redhat.com/ubi8/ubi
-----
+image::_images/Storage/02_PVC_Create.png[]
 
-NOTE: Because you already pulled one image named `ubi-working-container` this one is called `ubi-working-container-1`. 
 
-[#prerequisites]
-== Install Prerequisites
-
-Now that you have a working container, you will use the same process as before installing all the prerequisites, changing config files, and manipulating the contents of this container to be in the desired state.
-
-The software you will install is a JavaScript-based game that runs on a web browser. As before in the lab, use dnf to install software inside the container. 
-
-. Use `buildah run` and install Apache (`httpd`) into the `ubi-working-container-1` container. 
+. Automatically the _PVC_ will be on *Bound* status
 +
-[source,bash]
-----
-buildah run ubi-working-container-1 -- dnf -y install httpd
-----
+image::_images/Storage/03_PVC_Bound.png[]
 
-== Enable Service
-
-The next thing to do is to use a systemctl to enable the service. The ubi-init provides full systemd service to the container.
-This will start up any of the services that are enabled. 
-
-. Enable the `httpd` service using `buildah run`
-
+. Now in the main cluster, navigate to *Storage* -> *PersistentVolumeClaims* and select project `clusters-cluster1`. Sort by Capacity
 +
-[source,bash]
-----
-buildah run ubi-working-container-1 -- systemctl enable httpd
-----
+image::_images/Storage/04_PVC_Created.png[]
 
-NOTE: The UBI standard image doesn't have systemd installed on it by default. The `ubi-init` container image does include systemd. Plan accordingly to which image you use to build applications.  
 
-== Explore Source Materials
+== Etcd storage
 
-A GitHub repository has already been synchronized to `/home/devops/clumsy-bird/` This repository contains the configurations for your application.
+Because _etcd_ writes data to disk and persists proposals on disk, its performance depends on disk performance. Although _etcd_ is not particularly I/O intensive, it requires a low latency block device for optimal performance and stability.
 
-. Verify the repository is cloned inside the `/home/devops/` directory
-+
-[source,bash]
-----
-cd /home/devops/
-----
+* In terms of latency, run etcd on top of a block device that can write at least 50 IOPS of 8000 bytes long sequentially.
+* That is, with a latency of 10ms, keep in mind that uses fdatasync to synchronize each write in the WAL. 
+* For heavy loaded clusters, sequential 500 IOPS of 8000 bytes (2 ms) are recommended. 
+* To achieve such performance, run etcd on machines that are backed by SSD or NVMe disks with low latency and high throughput. 
 
-+
-[source,bash]
-----
-git clone https://github.com/ellisonleao/clumsy-bird
-----
-+
-NOTE: The output states that the software has already been checked out. 
-+
-. Explore the JavaScript contents, index files, and everything else that we need for this web-based JavaScript software.
+Review the current etcd _PVCs_ for the `cluster1`
+
+image::_images/Storage/05_PVC_Etcd.png[]
+
+Later in this lab a new cluster is created using local disks for _etcd_.
+
+== OpenShift Virtualization image caching
+
+By default a CoreOS image is downloaded for each of the workers, which will cause more storage used and more overload to import the image.
+
+_Image caching_ is an advanced feature that you can use to optimize both cluster startup time and storage utilization. 
+[NOTE]
+This feature requires the use of a storage class that is capable of smart cloning and the ReadWriteMany access mode.
+
+Image caching works as follows:
+
+* The VM image is imported to a PVC that is associated with the hosted cluster.
+* A unique clone of that PVC is created for every KubeVirt VM that is added as a worker node to the cluster.
+
+Image caching reduces VM startup time by requiring only a single image import. It can further reduce overall cluster storage usage when the storage class supports copy-on-write cloning.
+
+== Destroy current cluster 
+
+. Delete the _managed cluster_ resource on multicluster engine operator by running the following command:
 +
 [source,bash,role=execute]
 ----
-ls clumsy-bird
-----
-
-== Add Source Materials to Container
-
-. Now that you have verified the source materials exist, you will put the software inside of my container image using the `buildah copy` command.
-+
-[source,bash]
-----
-buildah copy ubi-working-container-1 clumsy-bird /var/www/html
-----
-
-[#container]
-== Enable Container in Background
-
-In the previous section of this lab, you ran the game natively through interactive mode. Because you are now building a web application you will need to run the container in the background and access it through a web address. 
-
-. Execute `buildah config` to specify a port and initialize the container. 
-
-+
-[source,bash]
-----
-buildah config --port 80 --cmd "/usr/sbin/init" ubi-working-container-1
-----
-
-NOTE: The command makes a configuration change to this container. I'm configuring this container to accept connections to its port 80. When the container starts up, it should run the init command, which, in this case, is going to be the Apache daemon right from earlier when I enabled it.
-
-== Commit Container and Deploy
-
-. Now that we have a container in a working configured state, it is time to make that permanent by committing it to a container image called `clumsy-bird`
-+
-[source,bash]
-----
-buildah commit ubi-working-container-1 clumsy-bird
-----
-
-. Verify that the image was created with `podman`
-+
-[source,bash]
-----
-podman images
+oc delete managedcluster cluster1
 ----
 +
-. Run the container Now it's time to run the container. 
+.Sample Output
 +
-[source,bash]
+[%nowrap]
 ----
-podman run -d -p 8500:80 clumsy-bird
+managedcluster.cluster.open-cluster-management.io "cluster1" deleted
 ----
 
-== Verify Application
-
-Verify that the application is running by navigating to
-
-http://bastion.{guid}.example.opentlc.com:8500
+. Delete the _hosted cluster_ and its back-end resources by running the following command
++
+[source,bash,role=execute]
+----
+hcp destroy cluster kubevirt --name cluster1
+----
++
+.Sample Output
++
+[%nowrap]
+----
+2024-01-02T21:09:35Z    INFO    Found hosted cluster    {"namespace": "clusters", "name": "cluster1"}
+2024-01-02T21:09:36Z    INFO    Updated finalizer for hosted cluster    {"namespace": "clusters", "name": "cluster1"}
+2024-01-02T21:09:36Z    INFO    Deleting hosted cluster {"namespace": "clusters", "name": "cluster1"}
+2024-01-02T21:11:24Z    INFO    Deleting Secrets        {"namespace": "clusters"}
+2024-01-02T21:11:24Z    INFO    Deleted CLI generated secrets
+2024-01-02T21:11:24Z    INFO    Finalized hosted cluster        {"namespace": "clusters", "name": "cluster1"}
+2024-01-02T21:11:24Z    INFO    Successfully destroyed cluster and infrastructure       {"namespace": "clusters", "name": "cluster1", "infraID": "cluster1-qwpqk"}
+----
 

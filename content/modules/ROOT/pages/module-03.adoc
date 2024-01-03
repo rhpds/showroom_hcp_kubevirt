@@ -2,6 +2,17 @@
 
 You can use the hosted control plane command line interface, `hcp``, to create an *OpenShift Container Platform hosted cluster*. The hosted cluster is automatically imported as a managed cluster.
 
+== Size guidance
+
+See the following highly available hosted control plane requirements, which were tested with OpenShift Container Platform version 4.12.9 and later:
+
+* 78 pods
+* Three 8 GiB PVs for etcd
+* Minimum vCPU: approximately 5.5 cores
+* Minimum memory: approximately 19 GiB
+
+More information: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.9/html/clusters/cluster_mce_overview#hosted-sizing-guidance
+
 == Prerequisites
 
 . Connect to the bastion host of your environment
@@ -94,7 +105,7 @@ You can use the `--release-image`` flag to set up the hosted cluster with a spec
 +
 A default node pool is created for the cluster with two virtual machine worker replicas according to the `--node-pool-replicas` flag.
 
-. Verify the host control plane pods running inside of the new namespace created (`clusters-cluster1`)
+. Verify the host control plane are being created inside of the new namespace created (`clusters-cluster1`)
 +
 [source,bash,role=execute]
 ----
@@ -127,7 +138,7 @@ cluster1             cluster1-admin-kubeconfig   Partial    False       False   
 ----
 +
 [IMPORTANT]
-It takes some minutes until the cluster switches from Partial to Completed. You do not have to wait for the cluster to be fully deployed at this point and you may continue with the lab.
+It takes around 15 minutes until the cluster switches from Partial to Completed. You do not have to wait for the cluster to be fully deployed at this point and you may continue with the lab.
 
 . Go back to the ACM Console (`All Clusters` in the top menu)
 . Notice that the `cluster1` will appear automatically
@@ -138,10 +149,73 @@ image::_images/Install/01_ACM_Review.png[]
 +
 image::_images/Install/02_ACM_Progress.png[]
 
-. Review the information and scroll down and wait until the status is `Pending import`.
+. Review the information and scroll down and wait until the status is `Ready`
+
+. In the middle of the screen, press `Control plane pods`
++
+image::_images/Install/02_ACM_CP_pods.png[]
+
+. Expect to see a big list of pods, as shown in the following image:
++
+image::_images/Install/02_ACM_CP_pods_list.png[]
+. The list of the pods created are the following:
+** capi-provider
+** catalog-operator
+** certified-operators-catalog
+** cluster-api
+** cluster-autoscaler
+** cluster-image-registry-operator
+** cluster-network-operator
+** cluster-node-tuning-operator
+** cluster-policy-controller (x3)
+** cluster-storage-operator
+** cluster-version-operator
+** community-operators-catalog
+** control-plane-operator
+** csi-snapshot-controller
+** csi-snapshot-controller-operator
+** csi-snapshot-webhook
+** dns-operator
+** etcd (x3)
+** hosted-cluster-config-operator
+** ignition-server  (x3))
+** ignition-server-proxy  (x3))
+** ingress-operator
+** konnectivity-agent  (x3))
+** kube-apiserver  (x3))
+** kube-controller-manager  (x3))
+** kube-scheduler  (x3))
+** kubevirt-cloud-controller-manager
+** kubevirt-csi-controller
+** machine-approver
+** multus-admission-controller
+** network-node-identity (x3)
+** oauth-openshift (x3)
+** olm-operator
+** openshift-apiserver (x3))
+** openshift-controller-manager (x3))
+** openshift-oauth-apiserver (x3))
+** openshift-route-controller-manager (x3))
+** ovnkube-control-plane (x3))
+** packageserver (x3))
+** redhat-marketplace-catalog
+** redhat-operators-catalog
+
+The _Hosted Control Plane_ and _Data Plane_ use the _Konnectivity_ service to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:
+
+The _Konnectivity_ agent in the compute nodes, connects with the _Konnectivity_ server running as part of the _Hosted Control Plane_.
+
+The Kubernetes API Server uses this tunnel to communicate with the kubelet running on each compute node.
+
+The compute nodes reach the Hosted Cluster API via an exposed service. Depending on the infrastructure where the _Hosted Control Plane_ runs this service can be exposed via a load balancer, a node port, etc.
+
+The _Konnectivity_ server is used by the _Hosted Control Plane_ to consume services deployed in the hosted cluster namespace such as OLM, OpenShift Aggregated API and OAuth.
+
+image::_images/Review/hcp-dp-connection.png[]
+
+== Review creation
 
 . While the installation continues, check OpenShift Virtualization
-.. Select `local-cluster` in the top menu
 .. In the left menu navigate to *Virtualization* -> *Virtual Machines*
 .. Select project `clusters-cluster1`
 +
@@ -155,7 +229,7 @@ image::_images/Install/04_OCPV_Services.png[]
 +
 Notice the required services for a OpenShift are created inside the namespace for each cluster that has been created.
 
-. Navigate to *Networking* -> *Services*:
+. Navigate to *Networking* -> *Routes*:
 +
 image::_images/Install/05_OCPV_Routes.png[]
 +
@@ -199,7 +273,7 @@ image::_images/Install/10_OCPV_Guest_Nodes.png[]
 +
 image::_images/Install/11_OCPV_Guest_StorageClass.png[]
 +
-Storage Class is a _proxy_ to the host OpenShift Cluster storage class.
+Storage Class is a _interface_ to the host OpenShift Cluster storage class. Storage will be covered with more detail later on.
 
 == Review the cluster using the CLI
 
@@ -220,7 +294,7 @@ NAME       VERSION   KUBECONFIG                  PROGRESS   AVAILABLE   PROGRESS
 cluster1             cluster1-admin-kubeconfig   Partial    False       False         Waiting for Kube APIServer deployment to become available
 ----
 
-. Check the cluster operators status
+. Check the cluster operators
 +
 [source,bash,role=execute]
 ----
@@ -256,4 +330,18 @@ storage                                    4.14.5    True        False         F
 ----
 
 
-
+. Check the cluster nodes
++
+[source,bash,role=execute]
+----
+oc get nodes --kubeconfig=cluster1-kubeconfig
+----
++
+.Sample Output
++
+[%nowrap]
+----
+NAME                      AGE   STATUS         READY
+cluster1-ee50e7fb-ctrdd   62m   Running        True
+cluster1-ee50e7fb-dc59k   62m   Running        True
+----

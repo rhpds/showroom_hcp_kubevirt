@@ -28,6 +28,15 @@ The following table indicates which versions are supported for each platform:
 |AWS (Technology Preview)
 |4.11 - 4.14
 |4.14
+
+|IBM Z (Technology Preview)
+|4.14
+|4.14
+
+|IBM Power (Technology Preview)
+|4.14
+|4.14
+
 |===
 
 The _control plane_ of the *hosted cluster* runs as pods in a single namespace on the *hosting cluster*. When *OpenShift Container Platform* creates this type of hosted cluster, it creates _worker nodes_ that are independent of the _control plane_.
