@@ -101,7 +101,7 @@ hcp create cluster kubevirt \
 ----
 +
 [NOTE]
-You can use the `--release-image`` flag to set up the hosted cluster with a specific OpenShift Container Platform release.
+The parameter `--release-image` flag to set up the hosted cluster with a specific OpenShift Container Platform release.
 +
 A default node pool is created for the cluster with two virtual machine worker replicas according to the `--node-pool-replicas` flag.
 
@@ -158,48 +158,7 @@ image::_images/Install/02_ACM_CP_pods.png[]
 . Expect to see a big list of pods, as shown in the following image:
 +
 image::_images/Install/02_ACM_CP_pods_list.png[]
-. The list of the pods created are the following:
-** capi-provider
-** catalog-operator
-** certified-operators-catalog
-** cluster-api
-** cluster-autoscaler
-** cluster-image-registry-operator
-** cluster-network-operator
-** cluster-node-tuning-operator
-** cluster-policy-controller (x3)
-** cluster-storage-operator
-** cluster-version-operator
-** community-operators-catalog
-** control-plane-operator
-** csi-snapshot-controller
-** csi-snapshot-controller-operator
-** csi-snapshot-webhook
-** dns-operator
-** etcd (x3)
-** hosted-cluster-config-operator
-** ignition-server  (x3))
-** ignition-server-proxy  (x3))
-** ingress-operator
-** konnectivity-agent  (x3))
-** kube-apiserver  (x3))
-** kube-controller-manager  (x3))
-** kube-scheduler  (x3))
-** kubevirt-cloud-controller-manager
-** kubevirt-csi-controller
-** machine-approver
-** multus-admission-controller
-** network-node-identity (x3)
-** oauth-openshift (x3)
-** olm-operator
-** openshift-apiserver (x3))
-** openshift-controller-manager (x3))
-** openshift-oauth-apiserver (x3))
-** openshift-route-controller-manager (x3))
-** ovnkube-control-plane (x3))
-** packageserver (x3))
-** redhat-marketplace-catalog
-** redhat-operators-catalog
+
 
 The _Hosted Control Plane_ and _Data Plane_ use the _Konnectivity_ service to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:
 

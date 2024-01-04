@@ -96,14 +96,14 @@ spec:
 EOF
 ----
 
-. Finally add your cluster `cluster1` to the new `ManagedClusterSet`:
+. Finally add your cluster `cluster2` to the new `ManagedClusterSet`:
 +
 [source,sh,role=execute]
 ----
-oc label managedcluster cluster1 cluster.open-cluster-management.io/clusterset=development --overwrite
+oc label managedcluster cluster2 cluster.open-cluster-management.io/clusterset=development --overwrite
 ----
 
-. If you check back in the OpenShift Web Console you should now see that the `ManagedClusterSet` *development* has been created and that your hosted cluster *cluster1* is now a part of the `ManagedClusterSet`.
+. If you check back in the OpenShift Web Console you should now see that the `ManagedClusterSet` *development* has been created and that your hosted cluster *cluster2* is now a part of the `ManagedClusterSet`.
 
 == Set up Authentication
 
@@ -132,20 +132,20 @@ oc -n clusters create secret generic htpasswd-development --from-file=htpasswd=$
 +
 [source,sh,role=execute]
 ----
-oc -n clusters patch hostedcluster cluster1 --type=merge --patch='{"spec":{"configuration":{"oauth":{"identityProviders":[{"name":"development","type":"HTPasswd","htpasswd":{"fileData":{"name": "htpasswd-development"}},"mappingMethod":"claim"}],"templates":{"error":{"name":""},"login":{"name":""},"providerSelection":{"name":""}},"tokenConfig":{}}}}}'
+oc -n clusters patch hostedcluster cluster2 --type=merge --patch='{"spec":{"configuration":{"oauth":{"identityProviders":[{"name":"development","type":"HTPasswd","htpasswd":{"fileData":{"name": "htpasswd-development"}},"mappingMethod":"claim"}],"templates":{"error":{"name":""},"login":{"name":""},"providerSelection":{"name":""}},"tokenConfig":{}}}}}'
 ----
 
 . Retrieve the Console URL for your hosted cluster:
 +
 [source,sh,role=execute]
 ----
-oc get managedcluster cluster1 -o json | jq -r '.status.clusterClaims[] | select(.name == "consoleurl.cluster.open-cluster-management.io") | .value'
+oc get managedcluster cluster2 -o json | jq -r '.status.clusterClaims[] | select(.name == "consoleurl.cluster.open-cluster-management.io") | .value'
 ----
 +
 .Sample Output
 [source,text,options=nowrap]
 ----
-https://console-openshift-console.apps.cluster1.apps.d965w.dynamic.redhatworkshops.io
+https://console-openshift-console.apps.cluster2.apps.d965w.dynamic.redhatworkshops.io
 ----
 
 . In a web browser navigate to the console and log in using `admin` as the username with `openshift` as the password.
@@ -338,11 +338,11 @@ oc get policy -A | grep pipelines
 .Sample Output
 [source,text,options=nowrap]
 ----
-cluster1               development-policies.openshift-pipelines-installed   enforce              Compliant          64s
+cluster2               development-policies.openshift-pipelines-installed   enforce              Compliant          64s
 development-policies   openshift-pipelines-installed                        enforce              Compliant          3m12s
 ----
 +
-Note that the policy in the `development-policies` shows as *Compliant* - and that the policy has been copied to the one cluster in your `ManagedClusterSet` - *cluster1*.
+Note that the policy in the `development-policies` shows as *Compliant* - and that the policy has been copied to the one cluster in your `ManagedClusterSet` - *cluster2*.
 
 == Deploy OpenShift GitOps Operator
 
@@ -440,7 +440,7 @@ oc get policy -A | grep gitops
 .Sample Output
 [source,text,options=nowrap]
 ----
-cluster1               development-policies.openshift-gitops-installed      enforce              Compliant          13s
+cluster2               development-policies.openshift-gitops-installed      enforce              Compliant          13s
 development-policies   openshift-gitops-installed                           enforce              Compliant          32s
 ----
 
@@ -574,7 +574,7 @@ oc get policy -A | grep serverless
 .Sample Output
 [source,text,options=nowrap]
 ----
-cluster1               development-policies.openshift-serverless-installed   enforce              NonCompliant       24s
+cluster2               development-policies.openshift-serverless-installed   enforce              NonCompliant       24s
 development-policies   openshift-serverless-installed                        enforce              NonCompliant       2m11s
 ----
 +

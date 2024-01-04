@@ -10,7 +10,7 @@ image::_images/Storage/01_PVC_Menu.png[]
 
 . Press `Create PersistentVolumeClaim` on the top-right 
 
-. Fill with the name `pvc01` and the size `1 GiB`
+. Fill with the name `pvc-1` and the size `1 GiB`
 +
 image::_images/Storage/02_PVC_Create.png[]
 
@@ -38,6 +38,7 @@ Review the current etcd _PVCs_ for the `cluster1`
 image::_images/Storage/05_PVC_Etcd.png[]
 
 Later in this lab a new cluster is created using local disks for _etcd_.
+
 
 == OpenShift Virtualization image caching
 
@@ -89,4 +90,74 @@ hcp destroy cluster kubevirt --name cluster1
 2024-01-02T21:11:24Z    INFO    Finalized hosted cluster        {"namespace": "clusters", "name": "cluster1"}
 2024-01-02T21:11:24Z    INFO    Successfully destroyed cluster and infrastructure       {"namespace": "clusters", "name": "cluster1", "infraID": "cluster1-qwpqk"}
 ----
+
+== Create a new hosted cluster using image cache and using local storage for etcd
+
+The cluster already configured to use LVM Storage to provide local storage.
+
+. Navigate to *Operators* -> *Installed Operators* 
+. Search for _LVM Storage_
++
+image::_images/Storage/10_LVM_Storage_Operator.png[]
+
+. Click to get the details and navigate to tab _LVMCluster_
++
+image::_images/Storage/11_LVMCluster_List.png[]
+
+. Press _my-lvmcluster_ and review the _YAML_
++
+[source,yaml]
+----
+<<REDACTED>>
+spec:
+  storage:
+    deviceClasses:
+      - deviceSelector:
+          paths:
+            - /dev/vdd
+        fstype: xfs
+        name: vg1
+        thinPoolConfig:
+          name: thin-pool-1
+          overprovisionRatio: 10
+          sizePercent: 90
+<<REDACTED>>
+----
+
+. Navigate to *Storage* -> *StorageClasses*. A storageclass named `lvms-<name>` is created automatically when a _LVMCluster_ is configured. In this cluster is called `lvms-vg1`
++
+image::images/Storage/12_LVM_StorageClasses.png[]
+
+
+. Create a new hosted cluster named _cluster2_ using the command `hcp`:
++
+[source,bash,role=execute]
+----
+hcp create cluster kubevirt \
+--name cluster2 \
+--release-image quay.io/openshift-release-dev/ocp-release:4.14.5-x86_64 \
+--node-pool-replicas 2 \
+--pull-secret ~/pull-secret.json \
+--memory 6Gi \
+--cores 2 \
+--root-volume-cache-strategy=PVC \
+--etcd-storage-class lvms-vg1
+----
+
+. Meantime is creating, review the _Persistent Volume Claims_ inside of the namespace `clusters-cluster2`
++
+image::_images/Storage/13_PVC_Etcd_LVM.png[]
+
+
+. Notice a image with prefix `kv-boot-image-cache` is created. 
++
+image::_images/Storage/14_PVC_Image_cache.png[]
+
+. Select one of the _PVCs_ starting with _cluster2_ and scroll down to find the _Owner_.
++
+image::_images/Storage/15_PVC_Owner.png[]
+
+. Information about the _DataVolume_ will appear, scrolling down you can see information about the clone process.
++
+image::_images/Storage/16_PVC_Cloned.png[]
 

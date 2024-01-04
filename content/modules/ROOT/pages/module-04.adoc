@@ -163,7 +163,7 @@ metadata:
   name: reversewords
   namespace: default
 spec:
-  replicas: 8
+  replicas: 6
   selector:
     matchLabels:
       app: reversewords
@@ -224,8 +224,6 @@ reversewords-7c674f6697-7r2x2   0/1     Pending   0          49s
 reversewords-7c674f6697-7zcwt   0/1     Pending   0          49s
 reversewords-7c674f6697-bxxpn   0/1     Pending   0          49s
 reversewords-7c674f6697-cb8sx   0/1     Pending   0          49s
-reversewords-7c674f6697-ffc25   0/1     Pending   0          49s
-reversewords-7c674f6697-tmrnh   0/1     Pending   0          49s
 ----
 
 . Get the details of one of the pending pods
@@ -251,11 +249,11 @@ Events:
 [NOTE]
 The cluster trigers the autoscale up
 
-. List the current VMs on the the main cluster. Repeat  till the VMs are running a
+. List the current VMs on the the main cluster. Repeat until the VMs are in _Running_ status
 +
 [source,bash,role=execute]
 ----
-oc get vm
+oc get vm -n clusters-cluster1
 ----
 +
 .Sample Output
@@ -295,17 +293,16 @@ pod/reversewords-869fc9596b-lw4xw   1/1     Running   0          7m48s
 pod/reversewords-869fc9596b-mb2rb   1/1     Running   0          7m48s
 pod/reversewords-869fc9596b-ndstt   1/1     Running   0          7m48s
 pod/reversewords-869fc9596b-q2zpq   1/1     Running   0          7m48s
-pod/reversewords-869fc9596b-r4jd7   1/1     Running   0          7m48s
-pod/reversewords-869fc9596b-tq8sc   1/1     Running   0          7m48s
 ----
 
 
 . Delete the deployment
++
 [source,bash,role=execute]
 ----
 oc delete Deployment reversewords --kubeconfig=cluster1-kubeconfig
 ----
-
++
 [NOTE]
 Deleting the `Deployment` and waiting around 10min, it will trigger the scale down and the VMs are going to be deleted automatically. You don't need to wait as autoScaling is disabled in next step.
 
@@ -318,6 +315,13 @@ oc -n clusters patch nodepool cluster1 --type=json -p '[{"op": "remove", "path":
 
 
 After a few minutes the VMs will be reduced to two
++
+[source,bash,role=execute]
+----
+watch oc get vm -n clusters-cluster1
+----
+
+
 
 == Creating a new nodepool
 
@@ -355,7 +359,7 @@ oc get nodepool -n clusters
 [%nowrap]
 ----
 NAME             CLUSTER    DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-cluster1         cluster1                   5               True          False        4.14.5                                       
+cluster1         cluster1   2               2               False         False        4.14.5                                       
 cluster1-pool2   cluster1   2                               False         False                  True              True             Minimum availability requires 2 replicas, current 0 available
 ----
 
@@ -363,7 +367,7 @@ cluster1-pool2   cluster1   2                               False         False 
 +
 [source,bash,role=execute]
 ----
-oc get vm -A
+watch oc get vm -n clusters-cluster1
 ----
 +
 .Sample Output
