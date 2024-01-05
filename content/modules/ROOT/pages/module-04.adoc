@@ -6,7 +6,7 @@ After a hosted cluster is created, you can scale up the clusters in different wa
 
 == Scaling up a nodepool
 
-Scaling a nodepool is really simple, the only step is to modify the name of the replicas of the nodepool (by default has the name of the cluster)
+Scaling a nodepool is really simple, the only step is to modify the number of replicas of the nodepool (the nodepool by default has the name of the cluster)
 
 . List existing nodepools
 +
@@ -202,7 +202,7 @@ oc get Deployment --kubeconfig=cluster1-kubeconfig
 [%nowrap]
 ----
 NAME           READY   UP-TO-DATE   AVAILABLE   AGE
-reversewords   0/8     8            0           43s
+reversewords   0/6     6            0           43s
 ----
 
 . List the pods
@@ -226,9 +226,9 @@ reversewords-7c674f6697-bxxpn   0/1     Pending   0          49s
 reversewords-7c674f6697-cb8sx   0/1     Pending   0          49s
 ----
 
-. Get the details of one of the pending pods
+. Get the details of one of the pending pods (make sure to replace `reversewords-7c674f6697-5dgsx` with the name of one of *your* pods)
 +
-[source,bash,role=execute]
+[source,bash]
 ----
 oc describe pod reversewords-7c674f6697-5dgsx --kubeconfig=cluster1-kubeconfig
 ----
@@ -295,7 +295,6 @@ pod/reversewords-869fc9596b-ndstt   1/1     Running   0          7m48s
 pod/reversewords-869fc9596b-q2zpq   1/1     Running   0          7m48s
 ----
 
-
 . Delete the deployment
 +
 [source,bash,role=execute]
@@ -313,15 +312,12 @@ Deleting the `Deployment` and waiting around 10min, it will trigger the scale do
 oc -n clusters patch nodepool cluster1 --type=json -p '[{"op": "remove", "path": "/spec/autoScaling"},{"op":"add", "path": "/spec/replicas", "value": 2}]'
 ----
 
-
-After a few minutes the VMs will be reduced to two
+. After a few minutes the VMs will be reduced to two
 +
 [source,bash,role=execute]
 ----
 watch oc get vm -n clusters-cluster1
 ----
-
-
 
 == Creating a new nodepool
 

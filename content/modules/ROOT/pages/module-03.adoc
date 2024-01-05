@@ -1,6 +1,6 @@
 = Creating a Hosted Cluster on OpenShift Virtualization
 
-You can use the hosted control plane command line interface, `hcp``, to create an *OpenShift Container Platform hosted cluster*. The hosted cluster is automatically imported as a managed cluster.
+You can use the hosted control plane command line interface, `hcp`, to create an *OpenShift Container Platform hosted cluster*. The hosted cluster is automatically imported as a managed cluster.
 
 == Size guidance
 
@@ -141,7 +141,7 @@ cluster1             cluster1-admin-kubeconfig   Partial    False       False   
 It takes around 15 minutes until the cluster switches from Partial to Completed. You do not have to wait for the cluster to be fully deployed at this point and you may continue with the lab.
 
 . Go back to the ACM Console (`All Clusters` in the top menu)
-. Notice that the `cluster1` will appear automatically
+. Notice that the `cluster1` will appear automatically. If you don't see it yet, wait until it appears.
 +
 image::_images/Install/01_ACM_Review.png[]
 
@@ -159,7 +159,6 @@ image::_images/Install/02_ACM_CP_pods.png[]
 +
 image::_images/Install/02_ACM_CP_pods_list.png[]
 
-
 The _Hosted Control Plane_ and _Data Plane_ use the _Konnectivity_ service to establish a tunnel for communications from the control plane to the data plane. This connection works as follows:
 
 The _Konnectivity_ agent in the compute nodes, connects with the _Konnectivity_ server running as part of the _Hosted Control Plane_.
@@ -175,6 +174,7 @@ image::_images/Review/hcp-dp-connection.png[]
 == Review creation
 
 . While the installation continues, check OpenShift Virtualization
+.. Switch back to your `local-cluster`
 .. In the left menu navigate to *Virtualization* -> *Virtual Machines*
 .. Select project `clusters-cluster1`
 +
@@ -186,7 +186,7 @@ CoreOS disks are imported automatically and the VMs starts. They will act as a w
 +
 image::_images/Install/04_OCPV_Services.png[]
 +
-Notice the required services for a OpenShift are created inside the namespace for each cluster that has been created.
+Notice the required services for OpenShift are created inside the namespace for each cluster that has been created.
 
 . Navigate to *Networking* -> *Routes*:
 +
@@ -216,7 +216,7 @@ image::_images/Install/08_OCPV_Guest_Details.png[]
 
 . Click `Reval credentials` and copy the password for the `kubeadmin` user
 
-. Navigate to the `Console URL` and accept the self-signed certificate
+. Click on the `Console URL` and accept the self-signed certificate
 
 . Login to the new cluster with the credentials
 +

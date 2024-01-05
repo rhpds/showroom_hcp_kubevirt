@@ -147,6 +147,11 @@ oc get managedcluster cluster2 -o json | jq -r '.status.clusterClaims[] | select
 ----
 https://console-openshift-console.apps.cluster2.apps.d965w.dynamic.redhatworkshops.io
 ----
++
+[NOTE]
+====
+If this command fails it is most likely because your hosted cluster hasn't finished deploying. Wait for the cluster to be fully available before retrying the command (check the cluster status in the *All Clusters* view).
+====
 
 . In a web browser navigate to the console and log in using `admin` as the username with `openshift` as the password.
 +
@@ -562,7 +567,7 @@ subjects:
 EOF
 ----
 
-. This is all that you need to do to install *OpenShift GitOps* on all our development clusters.
+. This is all that you need to do to install _and configure_ *OpenShift Serverless* on all our development clusters.
 +
 Check that the policy has been deployed:
 +

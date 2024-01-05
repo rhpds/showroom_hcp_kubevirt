@@ -14,15 +14,15 @@ image::_images/Storage/01_PVC_Menu.png[]
 +
 image::_images/Storage/02_PVC_Create.png[]
 
-
-. Automatically the _PVC_ will be on *Bound* status
+. The _PVC_ will be created and switch to *Bound* status almost immediately.
 +
 image::_images/Storage/03_PVC_Bound.png[]
 
 . Now in the main cluster, navigate to *Storage* -> *PersistentVolumeClaims* and select project `clusters-cluster1`. Sort by Capacity
 +
 image::_images/Storage/04_PVC_Created.png[]
-
++
+You will see the PVC that has been created for use by the hosted cluster.
 
 == Etcd storage
 
@@ -39,10 +39,9 @@ image::_images/Storage/05_PVC_Etcd.png[]
 
 Later in this lab a new cluster is created using local disks for _etcd_.
 
-
 == OpenShift Virtualization image caching
 
-By default a CoreOS image is downloaded for each of the workers, which will cause more storage used and more overload to import the image.
+By default a CoreOS image is downloaded for each of the workers, which will cause more storage used and more overhead to import the image.
 
 _Image caching_ is an advanced feature that you can use to optimize both cluster startup time and storage utilization. 
 [NOTE]
@@ -70,6 +69,11 @@ oc delete managedcluster cluster1
 ----
 managedcluster.cluster.open-cluster-management.io "cluster1" deleted
 ----
++
+[NOTE]
+====
+This command takes a while to return - be patient and wait until you're back at the prompt.
+====
 
 . Delete the _hosted cluster_ and its back-end resources by running the following command
 +
@@ -90,10 +94,15 @@ hcp destroy cluster kubevirt --name cluster1
 2024-01-02T21:11:24Z    INFO    Finalized hosted cluster        {"namespace": "clusters", "name": "cluster1"}
 2024-01-02T21:11:24Z    INFO    Successfully destroyed cluster and infrastructure       {"namespace": "clusters", "name": "cluster1", "infraID": "cluster1-qwpqk"}
 ----
++
+[NOTE]
+====
+Again this command takes a while to return - be patient and wait until you're back at the prompt.
+====
 
-== Create a new hosted cluster using image cache and using local storage for etcd
+== Create a new hosted cluster using image caching and local storage for etcd
 
-The cluster already configured to use LVM Storage to provide local storage.
+The hosting cluster is already configured to use LVM Storage to provide local storage.
 
 . Navigate to *Operators* -> *Installed Operators* 
 . Search for _LVM Storage_
@@ -104,7 +113,7 @@ image::_images/Storage/10_LVM_Storage_Operator.png[]
 +
 image::_images/Storage/11_LVMCluster_List.png[]
 
-. Press _my-lvmcluster_ and review the _YAML_
+. Click on _my-lvmcluster_ and review the _YAML_
 +
 [source,yaml]
 ----
@@ -124,12 +133,11 @@ spec:
 <<REDACTED>>
 ----
 
-. Navigate to *Storage* -> *StorageClasses*. A storageclass named `lvms-<name>` is created automatically when a _LVMCluster_ is configured. In this cluster is called `lvms-vg1`
+. Navigate to *Storage* -> *StorageClasses*. A storageclass named `lvms-<name>` is created automatically when a _LVMCluster_ is configured. In this cluster it is called `lvms-vg1`
 +
 image::images/Storage/12_LVM_StorageClasses.png[]
 
-
-. Create a new hosted cluster named _cluster2_ using the command `hcp`:
+. Create a new hosted cluster named _cluster2_ using the `hcp` command:
 +
 [source,bash,role=execute]
 ----
@@ -144,10 +152,9 @@ hcp create cluster kubevirt \
 --etcd-storage-class lvms-vg1
 ----
 
-. Meantime is creating, review the _Persistent Volume Claims_ inside of the namespace `clusters-cluster2`
+. While the new cluster is being created, review the _Persistent Volume Claims_ in the namespace `clusters-cluster2`
 +
 image::_images/Storage/13_PVC_Etcd_LVM.png[]
-
 
 . Notice a image with prefix `kv-boot-image-cache` is created. 
 +
@@ -156,8 +163,12 @@ image::_images/Storage/14_PVC_Image_cache.png[]
 . Select one of the _PVCs_ starting with _cluster2_ and scroll down to find the _Owner_.
 +
 image::_images/Storage/15_PVC_Owner.png[]
++
+[NOTE]
+====
+It may take a few minutes for those PVCs to appear. Be patient and wait until you see two PVCs whose name starts with `cluster2`.
+====
 
 . Information about the _DataVolume_ will appear, scrolling down you can see information about the clone process.
 +
 image::_images/Storage/16_PVC_Cloned.png[]
-

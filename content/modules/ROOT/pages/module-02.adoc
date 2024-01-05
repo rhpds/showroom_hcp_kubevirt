@@ -25,7 +25,7 @@ image::_images/Review/03_ACM_Information.png[]
 image::_images/Review/04_ACM_MultiCluster_hub.png[]
 +
 [NOTE]
-Installation was done with default values. From version 2.9, it is not needed any step to used Hosted Control Planes with OpenShift Virtualization.
+Installation was done with default values. From RHACM 2.9, Hosted Control Planes are enabled out of the box with OpenShift Virtualization.
 
 * Select `All Clusters` in the top menu
 +
