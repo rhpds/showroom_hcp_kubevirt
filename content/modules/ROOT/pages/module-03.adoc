@@ -36,6 +36,9 @@ oc login {ocp_api} --username={ocp_username} --password={ocp_password} --insecur
 ----
 oc patch ingresscontroller -n openshift-ingress-operator default --type=json -p '[{ "op": "add", "path": "/spec/routeAdmission", "value": {wildcardPolicy: "WildcardsAllowed"}}]'
 ----
++
+[NOTE]
+This command was already executed for you to avoid disconnect your terminal.
 
 == Install hcp CLI
 
