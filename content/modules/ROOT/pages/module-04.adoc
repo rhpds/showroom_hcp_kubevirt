@@ -1,13 +1,15 @@
-= Scale up
+= Scale Up
 
 After a hosted cluster is created, you can scale up the clusters in different ways:
 
 * You can scale an existing node pool or enable node auto-scaling for the hosted cluster.
 * You can create nodes pools with new values (cores, memory)
 
-== Scaling up a nodepool
+== Scaling Up a nodepool
 
-Scaling a nodepool is really simple, the only step is to modify the number of replicas of the nodepool (the nodepool by default has the name of the cluster)
+Scaling a nodepool is really simple.
+The only step is to modify the number of replicas of the nodepool.
+The nodepool by default has the name of the cluster.
 
 . List existing nodepools
 +
@@ -76,7 +78,7 @@ cluster1-ee50e7fb-lmn5r   Ready    worker   10m   v1.27.6+d548052
 In a nodepool all the VMs have the same cores and memory assigned.
 
 
-== Scaling down a nodepool
+== Scaling Down a nodepool
 
 It is possible as well to scale down a cluster changing the number of the replicas.
 
@@ -131,10 +133,11 @@ cluster1-ee50e7fb-lmn5r   Ready    worker   15m   v1.27.6+d548052
 
 When you need more capacity dynamically in your hosted cluster, you can enable auto-scaling to install new worker nodes automatically.
 
-For the that is required to remove the `replicas` parameter and adding the `autoScaling` one, specifying the `max` and the `min`. In the following example is set to a min of 2 and a max of 5.
+To enable auto-scaling you need to add the parameter `autoScaling` and the values `max` and `min`.
+It is also required to remove the `replicas` parameter.
+In the following example auto-scaling is set to a min of 2 and a max of 5.
 
-
-. The node chosen node to be removed will disappear from the list
+. The node chosen to be removed will disappear from the list
 +
 [source,bash,role=execute]
 ----
@@ -269,7 +272,7 @@ cluster1-ee50e7fb-lmn5r   54m    Running   True
 cluster1-ee50e7fb-v2rf9   5m8s   Running   True
 ----
 
-. Wait some minutes and ensure the new nodes are Ready and the pods running
+. Wait a few minutes and ensure the new nodes are Ready and the pods running
 +
 [source,bash,role=execute]
 ----
@@ -320,7 +323,7 @@ oc -n clusters patch nodepool cluster1 --type=json -p '[{"op": "remove", "path":
 watch oc get vm -n clusters-cluster1
 ----
 
-== Creating a new nodepool
+== Creating a New nodepool
 
 It is possible to create a new nodepool with nodes with different resources as the default one created.
 
