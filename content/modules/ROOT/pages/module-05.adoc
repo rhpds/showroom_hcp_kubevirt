@@ -137,7 +137,7 @@ spec:
 A storageclass named `lvms-<name>` is created automatically when a _LVMCluster_ is configured.
 In this cluster it is called `lvms-vg1`
 +
-image::images/Storage/12_LVM_StorageClasses.png[]
+image::_images/Storage/12_LVM_StorageClasses.png[]
 
 . Create a new hosted cluster named _cluster2_ using the `hcp` command:
 +
