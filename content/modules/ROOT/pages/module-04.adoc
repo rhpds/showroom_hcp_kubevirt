@@ -1,7 +1,8 @@
 = Scale up
 
 After a hosted cluster is created, you can scale up the clusters in different ways:
-* You can scale an existing node pool or enable node auto-scaling for the hosted cluster. 
+
+* You can scale an existing node pool or enable node auto-scaling for the hosted cluster.
 * You can create nodes pools with new values (cores, memory)
 
 == Scaling up a nodepool
@@ -20,7 +21,7 @@ oc -n clusters get nodepool
 [%nowrap]
 ----
 NAME       CLUSTER    DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-cluster1   cluster1   2               2               False         False        4.14.5   
+cluster1   cluster1   2               2               False         False        4.14.5
 ----
 
 . Scale up nodepool `cluster` to three replicas
@@ -355,7 +356,7 @@ oc get nodepool -n clusters
 [%nowrap]
 ----
 NAME             CLUSTER    DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-cluster1         cluster1   2               2               False         False        4.14.5                                       
+cluster1         cluster1   2               2               False         False        4.14.5
 cluster1-pool2   cluster1   2                               False         False                  True              True             Minimum availability requires 2 replicas, current 0 available
 ----
 
