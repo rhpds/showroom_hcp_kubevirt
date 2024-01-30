@@ -185,6 +185,16 @@ image::_images/Install/03_OCPV_VMs.png[]
 +
 CoreOS disks are imported automatically and the VMs starts. They will act as a workers for the hosted control planes cluster.
 
+[IMPORTANT]
+In some situations in the lab we have detected the servers are failing reaching the ignition server. If the installation is taking long and accessing the console of the VM is showing failures accessing to ignition server please remove the _router_ pods.
+
+. (Run only if VMS are failing to reach ignition server)
++
+[source,bash,role=execute]
+----
+oc delete pods -n openshift-ingress --all
+----
+
 . In the left menu navigate to *Networking* -> *Services*:
 +
 image::_images/Install/04_OCPV_Services.png[]
