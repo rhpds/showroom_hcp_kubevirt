@@ -8,7 +8,7 @@ Using the UI create a PVC inside of the guest cluster (Ensure you are in the clu
 +
 image::_images/Storage/01_PVC_Menu.png[]
 
-. Press `Create PersistentVolumeClaim` on the top-right 
+. Press `Create PersistentVolumeClaim` on the top-right
 
 . Fill with the name `pvc-1` and the size `1 GiB`
 +
@@ -29,9 +29,9 @@ You will see the PVC that has been created for use by the hosted cluster.
 Because _etcd_ writes data to disk and persists proposals on disk, its performance depends on disk performance. Although _etcd_ is not particularly I/O intensive, it requires a low latency block device for optimal performance and stability.
 
 * In terms of latency, run etcd on top of a block device that can write at least 50 IOPS of 8000 bytes long sequentially.
-* That is, with a latency of 10ms, keep in mind that uses fdatasync to synchronize each write in the WAL. 
-* For heavy loaded clusters, sequential 500 IOPS of 8000 bytes (2 ms) are recommended. 
-* To achieve such performance, run etcd on machines that are backed by SSD or NVMe disks with low latency and high throughput. 
+* That is, with a latency of 10ms, keep in mind that uses fdatasync to synchronize each write in the WAL.
+* For heavy loaded clusters, sequential 500 IOPS of 8000 bytes (2 ms) are recommended.
+* To achieve such performance, run etcd on machines that are backed by SSD or NVMe disks with low latency and high throughput.
 
 Review the current etcd _PVCs_ for the `cluster1`
 
@@ -43,7 +43,7 @@ Later in this lab a new cluster is created using local disks for _etcd_.
 
 By default a CoreOS image is downloaded for each of the workers, which will cause more storage used and more overhead to import the image.
 
-_Image caching_ is an advanced feature that you can use to optimize both cluster startup time and storage utilization. 
+_Image caching_ is an advanced feature that you can use to optimize both cluster startup time and storage utilization.
 [NOTE]
 This feature requires the use of a storage class that is capable of smart cloning and the ReadWriteMany access mode.
 
@@ -54,7 +54,7 @@ Image caching works as follows:
 
 Image caching reduces VM startup time by requiring only a single image import. It can further reduce overall cluster storage usage when the storage class supports copy-on-write cloning.
 
-== Destroy current cluster 
+== Destroy current cluster
 
 . Delete the _managed cluster_ resource on multicluster engine operator by running the following command:
 +
@@ -104,7 +104,7 @@ Again this command takes a while to return - be patient and wait until you're ba
 
 The hosting cluster is already configured to use LVM Storage to provide local storage.
 
-. Navigate to *Operators* -> *Installed Operators* 
+. Navigate to *Operators* -> *Installed Operators*
 . Search for _LVM Storage_
 +
 image::_images/Storage/10_LVM_Storage_Operator.png[]
@@ -133,7 +133,9 @@ spec:
 <<REDACTED>>
 ----
 
-. Navigate to *Storage* -> *StorageClasses*. A storageclass named `lvms-<name>` is created automatically when a _LVMCluster_ is configured. In this cluster it is called `lvms-vg1`
+. Navigate to *Storage* -> *StorageClasses*.
+A storageclass named `lvms-<name>` is created automatically when a _LVMCluster_ is configured.
+In this cluster it is called `lvms-vg1`
 +
 image::images/Storage/12_LVM_StorageClasses.png[]
 
@@ -156,7 +158,7 @@ hcp create cluster kubevirt \
 +
 image::_images/Storage/13_PVC_Etcd_LVM.png[]
 
-. Notice a image with prefix `kv-boot-image-cache` is created. 
+. Notice a image with prefix `kv-boot-image-cache` is created.
 +
 image::_images/Storage/14_PVC_Image_cache.png[]
 
