@@ -4,7 +4,7 @@ You can use the hosted control plane command line interface, `hcp`, to create an
 
 == Size guidance
 
-See the following highly available hosted control plane requirements, which were tested with OpenShift Container Platform version 4.12.9 and later:
+See the following highly available hosted control plane requirements, which were tested with OpenShift Container Platform version 4.17.3 and later:
 
 * 78 pods
 * Three 8 GiB PVs for etcd
@@ -19,17 +19,31 @@ More information: https://access.redhat.com/documentation/en-us/red_hat_advanced
 +
 [source,bash,role=execute]
 ----
-sudo ssh root@192.168.123.100
+{bastion_ssh_command}
 ----
 
 
-. Login to the OpenShift Cluster (your hosting cluster)
+. Verify you login to the OpenShift Cluster (your hosting cluster)
 +
 [source,bash,role=execute,subs="attributes"]
 ----
-oc login {ocp_api} --username={ocp_username} --password={ocp_password} --insecure-skip-tls-verify=true
+oc version
 ----
++
+.Sample Output
++
+[%nowrap]
+----
+Client Version: 4.17.3
+Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
+Server Version: 4.17.3
+Kubernetes Version: v1.30.5
+----
++
+[NOTE]
+The output above is the OpenShift Cluster version.
 
+// TODO: is this necessary?
 . Allow wildcard routes for your Ingress Controllers
 +
 [source,bash,role=execute,subs="attributes"]
@@ -46,7 +60,7 @@ This command was already executed for you to avoid disconnect your terminal.
 +
 [source,bash,role=execute,subs="attributes"]
 ----
-curl -O https://hcp-cli-download-multicluster-engine.apps.{guid}.dynamic.redhatworkshops.io/linux/amd64/hcp.tar.gz
+curl -O https://hcp-cli-download-multicluster-engine.apps.cluster-{guid}.{guid}.gcp.redhatworkshops.io/linux/amd64/hcp.tar.gz
 ----
 
 . Extract the client
@@ -56,18 +70,20 @@ curl -O https://hcp-cli-download-multicluster-engine.apps.{guid}.dynamic.redhatw
 tar xvfz hcp.tar.gz -C /usr/local/bin/
 ----
 
-. Confirm that the command `hcp` is available 
+. Confirm that the command `hcp` is available
 +
 [source,bash,role=execute]
 ----
-hcp --version
+hcp version
 ----
 +
 .Sample Output
 +
 [%nowrap]
 ----
-hcp version openshift/hypershift: e87182ca75da37c74b371aa0f17aeaa41437561a. Latest supported OCP: 4.14.0
+Client Version: openshift/hypershift: b9e977da802d07591cd9fb8ad91ba24116f4a3a8. Latest supported OCP: 4.17.0
+Server Version: b9e977da802d07591cd9fb8ad91ba24116f4a3a8
+Server Supports OCP Versions: 4.17, 4.16, 4.15, 4.14
 ----
 
 [#create]
@@ -85,7 +101,7 @@ Some considerations:
 ----
 hcp create cluster kubevirt \
 --name cluster1 \
---release-image quay.io/openshift-release-dev/ocp-release:4.14.9-x86_64 \
+--release-image quay.io/openshift-release-dev/ocp-release:4.16.21-multi \
 --node-pool-replicas 2 \
 --pull-secret ~/pull-secret.json \
 --memory 6Gi \
@@ -96,11 +112,13 @@ hcp create cluster kubevirt \
 +
 [%nowrap]
 ----
-2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "Namespace", "namespace": "", "name": "clusters"}
-2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "Secret", "namespace": "clusters", "name": "cluster1-pull-secret"}
-2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "", "namespace": "clusters", "name": "cluster1"}
-2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "Secret", "namespace": "clusters", "name": "cluster1-etcd-encryption-key"}
-2023-12-02T21:49:55Z    INFO    Applied Kube resource   {"kind": "NodePool", "namespace": "clusters", "name": "cluster1"}
+2024-11-14T20:59:10Z    INFO    Applied Kube resource   {"kind": "Namespace", "namespace": "", "name": "clusters"}
+2024-11-14T20:59:10Z    INFO    Applied Kube resource   {"kind": "Secret", "namespace": "clusters", "name": "cluster1-pull-secret
+"}
+2024-11-14T20:59:11Z    INFO    Applied Kube resource   {"kind": "", "namespace": "clusters", "name": "cluster1"}
+2024-11-14T20:59:11Z    INFO    Applied Kube resource   {"kind": "Secret", "namespace": "clusters", "name": "cluster1-etcd-encryp
+tion-key"}
+2024-11-14T20:59:11Z    INFO    Applied Kube resource   {"kind": "NodePool", "namespace": "clusters", "name": "cluster1"}
 ----
 +
 [NOTE]
@@ -120,12 +138,12 @@ oc get pod -n clusters-cluster1
 [%nowrap]
 ----
 NAME                                      READY   STATUS    RESTARTS   AGE
-capi-provider-554c58b965-6cx78            1/1     Running   0          4m23s
-cluster-api-5f5b78d889-2tnqm              1/1     Running   0          4m24s
-control-plane-operator-67b7d4556b-4b4mq   1/1     Running   0          4m23s
+capi-provider-b49b96dc8-nhhpt             1/1     Running   0          45s
+cluster-api-5cddb86456-lsfxw              1/1     Running   0          45s
+control-plane-operator-5959f6bd5b-qh8k9   1/1     Running   0          44s
 ----
 
-. Check the status of the host clusters, querying the _Custom Resource_ named `HostedCluster`. 
+. Check the status of the host clusters, querying the _Custom Resource_ named `HostedCluster`.
 +
 [source,bash,role=execute]
 ----
@@ -185,15 +203,17 @@ image::_images/Install/03_OCPV_VMs.png[]
 +
 CoreOS disks are imported automatically and the VMs starts. They will act as a workers for the hosted control planes cluster.
 
-[IMPORTANT]
+[CAUTION]
+====
 In some situations in the lab we have detected the servers are failing reaching the ignition server. If the installation is taking long and accessing the console of the VM is showing failures accessing to ignition server please remove the _router_ pods.
-
-. (Run only if VMS are failing to reach ignition server)
++
+. _Run only if VMS are failing to reach ignition server_
 +
 [source,bash,role=execute]
 ----
 oc delete pods -n openshift-ingress --all
 ----
+====
 
 . In the left menu navigate to *Networking* -> *Services*:
 +
@@ -241,7 +261,7 @@ Notice the `Infrastructure provider` is `KubeVirt`.
 +
 image::_images/Install/10_OCPV_Guest_Nodes.png[]
 
-. Navigate to the left menu to *Storage* -> *StorageClasses* 
+. Navigate to the left menu to *Storage* -> *StorageClasses*
 +
 image::_images/Install/11_OCPV_Guest_StorageClass.png[]
 +
@@ -257,14 +277,6 @@ It is possible download the `kubeconfig` using the UI interface and using the co
 ----
 hcp create kubeconfig --name cluster1 > cluster1-kubeconfig
 ----
-+
-.Sample Output
-+
-[%nowrap]
-----
-NAME       VERSION   KUBECONFIG                  PROGRESS   AVAILABLE   PROGRESSING   MESSAGE
-cluster1             cluster1-admin-kubeconfig   Partial    False       False         Waiting for Kube APIServer deployment to become available
-----
 
 . Check the cluster operators
 +
@@ -278,29 +290,28 @@ oc get co --kubeconfig=cluster1-kubeconfig
 [%nowrap]
 ----
 NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-console                                    4.14.5    True        False         False      66m     
-csi-snapshot-controller                    4.14.5    True        False         False      72m     
-dns                                        4.14.5    True        False         False      67m     
-image-registry                             4.14.5    True        False         False      67m     
-ingress                                    4.14.5    True        False         False      66m     
-insights                                   4.14.5    True        False         False      67m     
-kube-apiserver                             4.14.5    True        False         False      72m     
-kube-controller-manager                    4.14.5    True        False         False      72m     
-kube-scheduler                             4.14.5    True        False         False      72m     
-kube-storage-version-migrator              4.14.5    True        False         False      67m     
-monitoring                                 4.14.5    True        False         False      65m     
-network                                    4.14.5    True        False         False      66m     
-node-tuning                                4.14.5    True        False         False      69m     
-openshift-apiserver                        4.14.5    True        False         False      72m     
-openshift-controller-manager               4.14.5    True        False         False      72m     
-openshift-samples                          4.14.5    True        False         False      66m     
-operator-lifecycle-manager                 4.14.5    True        False         False      72m     
-operator-lifecycle-manager-catalog         4.14.5    True        False         False      72m     
-operator-lifecycle-manager-packageserver   4.14.5    True        False         False      72m     
-service-ca                                 4.14.5    True        False         False      67m     
-storage                                    4.14.5    True        False         False      72m   
+console                                    4.16.21   True        False         False      12m
+csi-snapshot-controller                    4.16.21   True        False         False      26m
+dns                                        4.16.21   True        False         False      12m
+image-registry                             4.16.21   True        False         False      13m
+ingress                                    4.16.21   True        False         False      12m
+insights                                   4.16.21   True        False         False      15m
+kube-apiserver                             4.16.21   True        False         False      26m
+kube-controller-manager                    4.16.21   True        False         False      26m
+kube-scheduler                             4.16.21   True        False         False      26m
+kube-storage-version-migrator              4.16.21   True        False         False      14m
+monitoring                                 4.16.21   True        False         False      4m51s
+network                                    4.16.21   True        False         False      13m
+node-tuning                                4.16.21   True        False         False      17m
+openshift-apiserver                        4.16.21   True        False         False      26m
+openshift-controller-manager               4.16.21   True        False         False      26m
+openshift-samples                          4.16.21   True        False         False      11m
+operator-lifecycle-manager                 4.16.21   True        False         False      27m
+operator-lifecycle-manager-catalog         4.16.21   True        False         False      27m
+operator-lifecycle-manager-packageserver   4.16.21   True        False         False      26m
+service-ca                                 4.16.21   True        False         False      14m
+storage                                    4.16.21   True        False         False      27m
 ----
-
 
 . Check the cluster nodes
 +
@@ -313,7 +324,7 @@ oc get nodes --kubeconfig=cluster1-kubeconfig
 +
 [%nowrap]
 ----
-NAME                      AGE   STATUS         READY
-cluster1-ee50e7fb-ctrdd   62m   Running        True
-cluster1-ee50e7fb-dc59k   62m   Running        True
+NAME                      STATUS   ROLES    AGE   VERSION
+cluster1-7e351675-fh675   Ready    worker   18m   v1.29.9+5865c5b
+cluster1-7e351675-fhc49   Ready    worker   20m   v1.29.9+5865c5b
 ----
