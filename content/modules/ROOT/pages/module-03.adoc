@@ -11,16 +11,9 @@ See the following highly available hosted control plane requirements, which were
 * Minimum vCPU: approximately 5.5 cores
 * Minimum memory: approximately 19 GiB
 
-More information: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.9/html/clusters/cluster_mce_overview#hosted-sizing-guidance
+More information: https://access.redhat.com/documentation/en-us/red_hat_advanced_cluster_management_for_kubernetes/2.11/html/clusters/cluster_mce_overview#hosted-sizing-guidance
 
 == Prerequisites
-
-. Connect to the bastion host of your environment
-+
-[source,bash,role=execute]
-----
-sudo ssh root@192.168.123.100
-----
 
 
 . Login to the OpenShift Cluster (your hosting cluster)
@@ -46,28 +39,30 @@ This command was already executed for you to avoid disconnect your terminal.
 +
 [source,bash,role=execute,subs="attributes"]
 ----
-curl -O https://hcp-cli-download-multicluster-engine.apps.{guid}.dynamic.redhatworkshops.io/linux/amd64/hcp.tar.gz
+curl -O https://hcp-cli-download-multicluster-engine.apps.cluster-{guid}.dynamic.redhatworkshops.io/linux/amd64/hcp.tar.gz
 ----
 
 . Extract the client
 +
 [source,bash,role=execute]
 ----
-tar xvfz hcp.tar.gz -C /usr/local/bin/
+tar xvfz hcp.tar.gz
 ----
 
 . Confirm that the command `hcp` is available 
 +
 [source,bash,role=execute]
 ----
-hcp --version
+hcp version
 ----
 +
 .Sample Output
 +
 [%nowrap]
 ----
-hcp version openshift/hypershift: e87182ca75da37c74b371aa0f17aeaa41437561a. Latest supported OCP: 4.14.0
+Client Version: openshift/hypershift: c68950b6a4d2cc96cb42fb16c26da94dafa48891. Latest supported OCP: 4.16.0
+Server Version: c68950b6a4d2cc96cb42fb16c26da94dafa48891
+Server Supports OCP Versions: 4.16, 4.15, 4.14, 4.13
 ----
 
 [#create]
@@ -85,7 +80,7 @@ Some considerations:
 ----
 hcp create cluster kubevirt \
 --name cluster1 \
---release-image quay.io/openshift-release-dev/ocp-release:4.14.9-x86_64 \
+--release-image quay.io/openshift-release-dev/ocp-release:4.16.15-x86_64 \
 --node-pool-replicas 2 \
 --pull-secret ~/pull-secret.json \
 --memory 6Gi \
@@ -214,6 +209,8 @@ image::_images/Install/06_OCPV_PVCs.png[]
 Notice that the *etcd* disks for the control plane are created. These disks are used for the control planes pods. It is recommended to use a low-latency and fast I/O disks for etcd to avoid issues.
 
 == Review creation
+[IMPORTANT]
+Ignore the warning related to MTU. This environment is running under Virtualization, the MTU is set to 8950 instead the 9000 recommended.
 
 . Go back to *ACM* console and select `cluster1` and wait until the cluster creation is complete.
 +
