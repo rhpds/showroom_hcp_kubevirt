@@ -23,7 +23,7 @@ oc -n clusters get nodepool
 [%nowrap]
 ----
 NAME       CLUSTER    DESIRED NODES   CURRENT NODES   AUTOSCALING   AUTOREPAIR   VERSION   UPDATINGVERSION   UPDATINGCONFIG   MESSAGE
-cluster1   cluster1   2               2               False         False        4.14.5
+cluster1   cluster1   2               2               False         False        4.16.15  
 ----
 
 . Scale up nodepool `cluster` to three replicas
@@ -51,10 +51,10 @@ oc get vm -n clusters-cluster1
 +
 [%nowrap]
 ----
-NAME                      AGE   STATUS         READY
-cluster1-ee50e7fb-ctrdd   83m   Running        True
-cluster1-ee50e7fb-dc59k   83m   Running        True
-cluster1-ee50e7fb-lmn5r   37s   Provisioning   False
+NAME                      AGE   STATUS                    READY
+cluster1-e8c8e8b9-bpkkp   26m   Running                   True
+cluster1-e8c8e8b9-s6rvj   11s   WaitingForVolumeBinding   False
+cluster1-e8c8e8b9-v76qk   26m   Running                   True
 ----
 
 . After a few minutes, the node will be visible on the guest cluster
@@ -69,9 +69,9 @@ oc get node --kubeconfig=cluster1-kubeconfig
 [%nowrap]
 ----
 NAME                      STATUS   ROLES    AGE   VERSION
-cluster1-ee50e7fb-ctrdd   Ready    worker   71m   v1.27.6+d548052
-cluster1-ee50e7fb-dc59k   Ready    worker   71m   v1.27.6+d548052
-cluster1-ee50e7fb-lmn5r   Ready    worker   10m   v1.27.6+d548052
+cluster1-e8c8e8b9-bpkkp   Ready    worker   37m   v1.29.8+f10c92d
+cluster1-e8c8e8b9-s6rvj   Ready    worker   10m   v1.29.8+f10c92d
+cluster1-e8c8e8b9-v76qk   Ready    worker   37m   v1.29.8+f10c92d
 ----
 +
 [NOTE]
@@ -108,9 +108,9 @@ oc get vm -n clusters-cluster1
 [%nowrap]
 ----
 NAME                      AGE    STATUS        READY
-cluster1-ee50e7fb-ctrdd   100m   Terminating   False
-cluster1-ee50e7fb-dc59k   100m   Running       True
-cluster1-ee50e7fb-lmn5r   17m    Running       True
+cluster1-e8c8e8b9-v76qk   100m   Terminating   False
+cluster1-e8c8e8b9-bpkkp   100m   Running       True
+cluster1-e8c8e8b9-s6rvj   17m    Running       True
 ----
 
 . The node chosen node to be removed will disappear from the list
@@ -124,9 +124,9 @@ oc get node --kubeconfig=cluster1-kubeconfig
 +
 [%nowrap]
 ----
-NAME                      STATUS   ROLES    AGE   VERSION
-cluster1-ee50e7fb-dc59k   Ready    worker   76m   v1.27.6+d548052
-cluster1-ee50e7fb-lmn5r   Ready    worker   15m   v1.27.6+d548052
+NAME                      AGE   STATUS    READY
+cluster1-e8c8e8b9-bpkkp   46m   Running   True
+cluster1-e8c8e8b9-s6rvj   19m   Running   True
 ----
 
 == Configure Autoscale
@@ -265,11 +265,11 @@ oc get vm -n clusters-cluster1
 [%nowrap]
 ----
 NAME                      AGE    STATUS    READY
-cluster1-ee50e7fb-bqbrk   5m8s   Running   True
-cluster1-ee50e7fb-dc59k   137m   Running   True
-cluster1-ee50e7fb-ddd7h   5m8s   Running   True
-cluster1-ee50e7fb-lmn5r   54m    Running   True
-cluster1-ee50e7fb-v2rf9   5m8s   Running   True
+cluster1-e8c8e8b9-56lbs   3m1s   Running   True
+cluster1-e8c8e8b9-bpkkp   50m    Running   True
+cluster1-e8c8e8b9-hg8tr   3m1s   Running   True
+cluster1-e8c8e8b9-s6rvj   24m    Running   True
+cluster1-e8c8e8b9-w5nt7   3m1s   Running   True
 ----
 
 . Wait a few minutes and ensure the new nodes are Ready and the pods running
@@ -283,20 +283,20 @@ oc get node,pod --kubeconfig=cluster1-kubeconfig
 +
 [%nowrap]
 ----
-NAME                           STATUS   ROLES    AGE     VERSION
-node/cluster1-7967429f-7r7r2   Ready    worker   51m     v1.27.6+d548052
-node/cluster1-7967429f-gxcks   Ready    worker   4m6s    v1.27.6+d548052
-node/cluster1-7967429f-gxj2n   Ready    worker   4m4s    v1.27.6+d548052
-node/cluster1-7967429f-k884d   Ready    worker   4m10s   v1.27.6+d548052
-node/cluster1-7967429f-zqppg   Ready    worker   78m     v1.27.6+d548052
+NAME                           STATUS   ROLES    AGE    VERSION
+node/cluster1-e8c8e8b9-56lbs   Ready    worker   118s   v1.29.8+f10c92d
+node/cluster1-e8c8e8b9-bpkkp   Ready    worker   48m    v1.29.8+f10c92d
+node/cluster1-e8c8e8b9-hg8tr   Ready    worker   110s   v1.29.8+f10c92d
+node/cluster1-e8c8e8b9-s6rvj   Ready    worker   21m    v1.29.8+f10c92d
+node/cluster1-e8c8e8b9-w5nt7   Ready    worker   98s    v1.29.8+f10c92d
 
-NAME                                READY   STATUS    RESTARTS   AGE
-pod/reversewords-869fc9596b-2nhs9   1/1     Running   0          7m48s
-pod/reversewords-869fc9596b-44lwv   1/1     Running   0          7m48s
-pod/reversewords-869fc9596b-lw4xw   1/1     Running   0          7m48s
-pod/reversewords-869fc9596b-mb2rb   1/1     Running   0          7m48s
-pod/reversewords-869fc9596b-ndstt   1/1     Running   0          7m48s
-pod/reversewords-869fc9596b-q2zpq   1/1     Running   0          7m48s
+NAME                               READY   STATUS    RESTARTS   AGE
+pod/reversewords-f4c789568-55cnq   1/1     Running   0          5m35s
+pod/reversewords-f4c789568-d6pb6   1/1     Running   0          5m35s
+pod/reversewords-f4c789568-fdjzf   1/1     Running   0          5m35s
+pod/reversewords-f4c789568-jwxhh   1/1     Running   0          5m35s
+pod/reversewords-f4c789568-lfj5b   1/1     Running   0          5m36s
+pod/reversewords-f4c789568-ws7vz   1/1     Running   0          5m35s
 ----
 
 . Delete the deployment
