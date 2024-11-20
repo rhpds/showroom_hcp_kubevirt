@@ -275,27 +275,27 @@ oc get co --kubeconfig=cluster1-kubeconfig
 [%nowrap]
 ----
 NAME                                       VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE   MESSAGE
-console                                    4.14.5    True        False         False      66m     
-csi-snapshot-controller                    4.14.5    True        False         False      72m     
-dns                                        4.14.5    True        False         False      67m     
-image-registry                             4.14.5    True        False         False      67m     
-ingress                                    4.14.5    True        False         False      66m     
-insights                                   4.14.5    True        False         False      67m     
-kube-apiserver                             4.14.5    True        False         False      72m     
-kube-controller-manager                    4.14.5    True        False         False      72m     
-kube-scheduler                             4.14.5    True        False         False      72m     
-kube-storage-version-migrator              4.14.5    True        False         False      67m     
-monitoring                                 4.14.5    True        False         False      65m     
-network                                    4.14.5    True        False         False      66m     
-node-tuning                                4.14.5    True        False         False      69m     
-openshift-apiserver                        4.14.5    True        False         False      72m     
-openshift-controller-manager               4.14.5    True        False         False      72m     
-openshift-samples                          4.14.5    True        False         False      66m     
-operator-lifecycle-manager                 4.14.5    True        False         False      72m     
-operator-lifecycle-manager-catalog         4.14.5    True        False         False      72m     
-operator-lifecycle-manager-packageserver   4.14.5    True        False         False      72m     
-service-ca                                 4.14.5    True        False         False      67m     
-storage                                    4.14.5    True        False         False      72m   
+console                                    4.16.15   True        False         False      16m     
+csi-snapshot-controller                    4.16.15   True        False         False      24m     
+dns                                        4.16.15   True        False         False      16m     
+image-registry                             4.16.15   True        False         False      17m     
+ingress                                    4.16.15   True        False         False      16m     
+insights                                   4.16.15   True        False         False      18m     
+kube-apiserver                             4.16.15   True        False         False      24m     
+kube-controller-manager                    4.16.15   True        False         False      24m     
+kube-scheduler                             4.16.15   True        False         False      24m     
+kube-storage-version-migrator              4.16.15   True        False         False      18m     
+monitoring                                 4.16.15   True        False         False      15m     
+network                                    4.16.15   True        False         False      19m     
+node-tuning                                4.16.15   True        False         False      20m     
+openshift-apiserver                        4.16.15   True        False         False      24m     
+openshift-controller-manager               4.16.15   True        False         False      24m     
+openshift-samples                          4.16.15   True        False         False      16m     
+operator-lifecycle-manager                 4.16.15   True        False         False      24m     
+operator-lifecycle-manager-catalog         4.16.15   True        False         False      24m     
+operator-lifecycle-manager-packageserver   4.16.15   True        False         False      24m     
+service-ca                                 4.16.15   True        False         False      18m     
+storage                                    4.16.15   True        False         False      24m  
 ----
 
 
@@ -310,7 +310,7 @@ oc get nodes --kubeconfig=cluster1-kubeconfig
 +
 [%nowrap]
 ----
-NAME                      AGE   STATUS         READY
-cluster1-ee50e7fb-ctrdd   62m   Running        True
-cluster1-ee50e7fb-dc59k   62m   Running        True
+NAME                      STATUS   ROLES    AGE   VERSION
+cluster1-e8c8e8b9-bpkkp   Ready    worker   21m   v1.29.8+f10c92d
+cluster1-e8c8e8b9-v76qk   Ready    worker   21m   v1.29.8+f10c92d
 ----
