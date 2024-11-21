@@ -2,7 +2,7 @@
 
 == Login
 
-Login to {ocp_console}/dashboards[window=_blank] with the user `{ocp_username}` and the password `{ocp_password}`
+Login to {openshift_cluster_console_url}/dashboards[window=_blank] with the user `{openshift_cluster_admin_username}` and the password `{openshift_cluster_admin_password}`
 
 [#acm]
 == Review ACM
@@ -43,7 +43,7 @@ It is possible to create clusters on different infrastructure provides using the
 
 Click on `local-cluster` and review the different tabs (_Overview_, _Nodes_, _Add-ons_).
 
-To use *OpenShift Virtualization* as the infrastructure for a new cluster it is necessary to use the CLI at this point.
+It is possible to use the UI to create a cluster on *OpenShift Virtualization* but this lab focus on using the command line.
 
 [#ocpv]
 == Review OpenShift Virtualization
