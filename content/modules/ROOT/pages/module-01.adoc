@@ -9,7 +9,7 @@ With _multicluster engine operator cluster management_, you can deploy *OpenShif
 
 * With *hosted control planes* for *OpenShift Container Platform*, you create _control planes_ as _pods_ on a _hosting cluster_ without the need for dedicated physical machines for each control plane.
 
-*Hosted control planes for OpenShift Container Platform* are available on bare metal and *Red Hat OpenShift Virtualization*, and as a _Technology Preview_ feature on _Amazon Web Services_ (_AWS_). You can host the _control planes_ on *OpenShift Container Platform version 4.14*. The *hosted control planes* feature is enabled by default.
+*Hosted control planes for OpenShift Container Platform* are available on *Amazon Web Services (AWS)*, *IBM Power*, *IBM Z*, *Red Hat OpenShift Virtualization*, *bare metal*, and *non bare metal agent machines*. The hosted control planes feature is enabled by default.
 
 The following table indicates which versions are supported for each platform:
 
@@ -18,24 +18,28 @@ The following table indicates which versions are supported for each platform:
 |Platform |Hosting HCP version|Minium hosted OCP version
 
 |Bare metal
-|4.14
-|4.14
+|4.14-4.16
+|4.14-4.16 (only)
 
 |Red Hat OpenShift Virtualization
-|4.14
-|4.14
+|4.14-4.16
+|4.14-4.16 (only)
 
-|AWS (Technology Preview)
-|4.11 - 4.14
-|4.14
+|AWS
+|4.11 - 4.16
+|4.14 - 4.16 (only)
 
-|IBM Z (Technology Preview)
-|4.14
-|4.14
+|IBM Z
+|4.16
+|4.16 (only)
 
-|IBM Power (Technology Preview)
-|4.14
-|4.14
+|IBM Power
+|4.16
+|4.16 (only)
+
+| Non bare metal agent machines
+|4.16
+|4.16 (only)
 
 |===
 

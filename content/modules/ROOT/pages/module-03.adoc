@@ -16,6 +16,13 @@ More information: https://access.redhat.com/documentation/en-us/red_hat_advanced
 == Prerequisites
 
 
+. Unset KUBERNETES_SERVICE_HOST (only needed on the web terminal)
++
+[source,bash,role=execute]
+----
+unset KUBERNETES_SERVICE_PORT
+----
+
 . Login to the OpenShift Cluster (your hosting cluster)
 +
 [source,bash,role=execute,subs="attributes"]
@@ -42,12 +49,21 @@ This command was already executed for you to avoid disconnect your terminal.
 curl -O https://hcp-cli-download-multicluster-engine.apps.cluster-{guid}.dynamic.redhatworkshops.io/linux/amd64/hcp.tar.gz
 ----
 
+. Create bin directory
++
+[source,bash,role=execute]
+----
+mkdir /home/lab-user/bin/
+----
+
 . Extract the client
 +
 [source,bash,role=execute]
 ----
-tar xvfz hcp.tar.gz
+tar xvfz hcp.tar.gz -C /home/lab-user/bin/
 ----
+
+
 
 . Confirm that the command `hcp` is available 
 +
@@ -73,6 +89,14 @@ Some considerations:
 * Run the hub cluster and workers on the same platform for hosted control planes.
 * Each hosted cluster must have a unique name in order for multicluster engine operator to manage it.
 * A hosted cluster cannot be created in the namespace of a multicluster engine operator managed cluster.
+
+. Extract pull secret from the host cluster
++
+[%nowrap]
+----
+oc get secret -n openshift-config pull-secret -o template='{{index .data ".dockerconfigjson"}}' | base64 --decode > ~/pull-secret.json
+----
+
 
 . Create a new hosted cluster named _cluster1_ using the command `hcp`:
 +
@@ -180,15 +204,6 @@ image::_images/Install/03_OCPV_VMs.png[]
 +
 CoreOS disks are imported automatically and the VMs starts. They will act as a workers for the hosted control planes cluster.
 
-[IMPORTANT]
-In some situations in the lab we have detected the servers are failing reaching the ignition server. If the installation is taking long and accessing the console of the VM is showing failures accessing to ignition server please remove the _router_ pods.
-
-. (Run only if VMS are failing to reach ignition server)
-+
-[source,bash,role=execute]
-----
-oc delete pods -n openshift-ingress --all
-----
 
 . In the left menu navigate to *Networking* -> *Services*:
 +
