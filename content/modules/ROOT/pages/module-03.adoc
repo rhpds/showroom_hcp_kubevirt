@@ -92,7 +92,7 @@ Some considerations:
 
 . Extract pull secret from the host cluster
 +
-[%nowrap]
+[source,bash,role=execute]
 ----
 oc get secret -n openshift-config pull-secret -o template='{{index .data ".dockerconfigjson"}}' | base64 --decode > ~/pull-secret.json
 ----

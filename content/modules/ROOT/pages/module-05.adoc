@@ -10,7 +10,7 @@ image::_images/Storage/01_PVC_Menu.png[]
 
 . Press `Create PersistentVolumeClaim` on the top-right
 
-. Fill with the name `pvc-1` and the size `1 GiB`
+. Fill with the name `pvc-1` and the size `1 GiB`, select *Block*
 +
 image::_images/Storage/02_PVC_Create.png[]
 
