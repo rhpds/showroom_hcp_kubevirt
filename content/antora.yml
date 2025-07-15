@@ -1,12 +1,12 @@
 name: modules
-title: Hosted Control Plane Clusters on OpenShift Virtualization
+title: OpenShift on OpenShift with Virtualization and Hosted Control Planes
 version: master
 nav:
 - modules/ROOT/nav.adoc
 
 asciidoc:
   attributes:
-    lab_name: Hosted Control Plane Clusters on OpenShift Virtualization
+    lab_name: OpenShift on OpenShift with Virtualization and Hosted Control Planes
     release-version: master
     page-pagination: true
     experimental: true
@@ -14,6 +14,7 @@ asciidoc:
     ssh_user: devops
     ssh_password: devops
     ssh_command: ssh devops@bastion.{guid}.example.opentlc.com
+    openshift_version: 4.18
 
   extensions:
   - ./content/lib/tab-block.js
