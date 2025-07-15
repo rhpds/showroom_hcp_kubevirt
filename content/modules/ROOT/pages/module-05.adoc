@@ -86,13 +86,13 @@ hcp destroy cluster kubevirt --name cluster1
 +
 [%nowrap]
 ----
-2024-01-02T21:09:35Z    INFO    Found hosted cluster    {"namespace": "clusters", "name": "cluster1"}
-2024-01-02T21:09:36Z    INFO    Updated finalizer for hosted cluster    {"namespace": "clusters", "name": "cluster1"}
-2024-01-02T21:09:36Z    INFO    Deleting hosted cluster {"namespace": "clusters", "name": "cluster1"}
-2024-01-02T21:11:24Z    INFO    Deleting Secrets        {"namespace": "clusters"}
-2024-01-02T21:11:24Z    INFO    Deleted CLI generated secrets
-2024-01-02T21:11:24Z    INFO    Finalized hosted cluster        {"namespace": "clusters", "name": "cluster1"}
-2024-01-02T21:11:24Z    INFO    Successfully destroyed cluster and infrastructure       {"namespace": "clusters", "name": "cluster1", "infraID": "cluster1-qwpqk"}
+2024-11-15T00:06:23Z    INFO    Found hosted cluster    {"namespace": "clusters", "name": "cluster1"}
+2024-11-15T00:06:23Z    INFO    Marking cleanup of cloud resources for hosted cluster   {"namespace": "clusters", "name": "cluster1"}
+2024-11-15T00:06:24Z    INFO    Updated hosted cluster  {"namespace": "clusters", "name": "cluster1"}
+2024-11-15T00:06:24Z    INFO    Deleting hosted cluster {"namespace": "clusters", "name": "cluster1"}
+2024-11-15T00:09:33Z    INFO    Deleting Secrets        {"namespace": "clusters"}
+2024-11-15T00:09:33Z    INFO    Deleted CLI generated secrets
+2024-11-15T00:09:33Z    INFO    Successfully destroyed cluster and infrastructure       {"namespace": "clusters", "name": "cluster1", "infraID": "cluster1-gbw7x"}
 ----
 +
 [NOTE]
