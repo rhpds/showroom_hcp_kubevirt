@@ -15,7 +15,28 @@ asciidoc:
     ssh_password: devops
     ssh_command: ssh devops@bastion.{guid}.example.opentlc.com
     openshift_version: 4.18
-
-  extensions:
-  - ./content/lib/tab-block.js
-  - ./content/lib/remote-include-processor.js
+    openshift_cluster_console_url: sample
+    openshift_cluster_admin_username: sample
+    api_url: sample
+    bastion_public_hostname: sample
+    bastion_ssh_password: sample
+    bastion_ssh_port: sample
+    bastion_ssh_user_name: sample
+    openshift_api_server_url: sample
+    openshift_api_url: sample
+    openshift_client_download_url: sample
+    openshift_cluster_admin_password: sample
+    openshift_cluster_ingress_domain: sample
+    openshift_cluster_num_users: sample
+    openshift_cluster_user_base: sample
+    openshift_cluster_user_count: sample
+    openshift_cluster_user_name: sample
+    openshift_cluster_user_password: sample
+    openshift_console_url: sample
+    openshift_kubeadmin_password: sample
+    showroom_primary_view_url: sample
+    web_console_url: sample
+    ocp_console: sample
+    ocp_username: sample
+    ocp_password: sample
+    ocp_api: sample
