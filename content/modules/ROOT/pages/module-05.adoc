@@ -6,21 +6,21 @@ Using the UI create a PVC inside of the guest cluster (Ensure you are in the clu
 
 . Navigate to *Storage* -> *PersistentVolumeClaims*
 +
-image::_images/Storage/01_PVC_Menu.png[]
+image::/Storage/01_PVC_Menu.png[]
 
 . Press `Create PersistentVolumeClaim` on the top-right
 
 . Fill with the name `pvc-1` and the size `1 GiB`
 +
-image::_images/Storage/02_PVC_Create.png[]
+image::/Storage/02_PVC_Create.png[]
 
 . The _PVC_ will be created and switch to *Bound* status almost immediately.
 +
-image::_images/Storage/03_PVC_Bound.png[]
+image::/Storage/03_PVC_Bound.png[]
 
 . Now in the main cluster, navigate to *Storage* -> *PersistentVolumeClaims* and select project `clusters-cluster1`. Sort by Capacity
 +
-image::_images/Storage/04_PVC_Created.png[]
+image::/Storage/04_PVC_Created.png[]
 +
 You will see the PVC that has been created for use by the hosted cluster.
 
@@ -35,7 +35,7 @@ Because _etcd_ writes data to disk and persists proposals on disk, its performan
 
 Review the current etcd _PVCs_ for the `cluster1`
 
-image::_images/Storage/05_PVC_Etcd.png[]
+image::/Storage/05_PVC_Etcd.png[]
 
 Later in this lab a new cluster is created using local disks for _etcd_.
 
@@ -107,11 +107,11 @@ The hosting cluster is already configured to use LVM Storage to provide local st
 . Navigate to *Operators* -> *Installed Operators*
 . Search for _LVM Storage_
 +
-image::_images/Storage/10_LVM_Storage_Operator.png[]
+image::/Storage/10_LVM_Storage_Operator.png[]
 
 . Click to get the details and navigate to tab _LVMCluster_
 +
-image::_images/Storage/11_LVMCluster_List.png[]
+image::/Storage/11_LVMCluster_List.png[]
 
 . Click on _my-lvmcluster_ and review the _YAML_
 +
@@ -137,7 +137,7 @@ spec:
 A storageclass named `lvms-<name>` is created automatically when a _LVMCluster_ is configured.
 In this cluster it is called `lvms-vg1`
 +
-image::_images/Storage/12_LVM_StorageClasses.png[]
+image::/Storage/12_LVM_StorageClasses.png[]
 
 . Create a new hosted cluster named _cluster2_ using the `hcp` command:
 +
@@ -156,15 +156,15 @@ hcp create cluster kubevirt \
 
 . While the new cluster is being created, review the _Persistent Volume Claims_ in the namespace `clusters-cluster2`
 +
-image::_images/Storage/13_PVC_Etcd_LVM.png[]
+image::/Storage/13_PVC_Etcd_LVM.png[]
 
 . Notice a image with prefix `kv-boot-image-cache` is created.
 +
-image::_images/Storage/14_PVC_Image_cache.png[]
+image::/Storage/14_PVC_Image_cache.png[]
 
 . Select one of the _PVCs_ starting with _cluster2_ and scroll down to find the _Owner_.
 +
-image::_images/Storage/15_PVC_Owner.png[]
+image::/Storage/15_PVC_Owner.png[]
 +
 [NOTE]
 ====
@@ -173,4 +173,4 @@ It may take a few minutes for those PVCs to appear. Be patient and wait until yo
 
 . Information about the _DataVolume_ will appear, scrolling down you can see information about the clone process.
 +
-image::_images/Storage/16_PVC_Cloned.png[]
+image::/Storage/16_PVC_Cloned.png[]
