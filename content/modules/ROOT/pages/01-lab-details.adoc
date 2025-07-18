@@ -20,7 +20,7 @@ In this module we will deploy an application and scale it up, requiring the clus
 
 *Managing clusters using policies:* Using policies to deploy operators and authentication.
 
-=== Keys to lab success
+== Keys to lab success
 
 * Please read all instructions carefully when carrying out assigned tasks and do not only focus on the images provided.
 * If you are stuck and need assistance, please raise your hand and a proctor will see to you as soon as possible.
@@ -28,7 +28,9 @@ In this module we will deploy an application and scale it up, requiring the clus
 * A Chromium-based browser is recommended for the best experience.
 
 [[lab-info]]
-=== Credentials for the OpenShift Console
+== Lab access
+
+=== OpenShift Console access
 
 Navigate to your {openshift_cluster_console_url}[OpenShift cluster console^].
 
