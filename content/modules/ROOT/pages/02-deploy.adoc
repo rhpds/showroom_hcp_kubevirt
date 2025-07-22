@@ -132,7 +132,7 @@ CAUTION: Be sure to select the *Release image #version 4.17.xx#*, so the cluster
 .. *Infrastructure provider credential:* kubevirt-secret
 .. *Cluster name:* `my-hosted-cluster`
 .. *Cluster set:* default
-.. *Release image:* #OpenShift *4.17.xx*#
+.. *Release image:* #OpenShift *4.18.xx*#
 .. *Etcd storage class:* ocs-external-storagecluster-ceph-rbd
 .. Click on *Next* after filling out the options.
 +
@@ -166,7 +166,19 @@ image::deploy/create_cluster_review.png[link=self, window=blank, width=100%]
 
 . A message that the cluster is starting deployment appears, and then will forward to the overview page for the hosted cluster.
 +
+image::deploy/hosted_cluster_overview.png[link=self, window=blank, width=100%]
+
 NOTE: Please be patient while the cluster deploys.
+
+. The cluster provisioning process deploys pods to implement the hosted cluster's control plane.
+The provisioning process also deploys virtual machines to implement the node pool.
+While the cluster is provisioning, watch how virtual machines are deployed.
+[arabic]
+.. On the left, click *Virtual machines*.
+.. They will each have a unique name, prefixed by the node pool name.
+.. They will each, eventually, have an IP address on the pod network.
++
+image::deploy/hosted_cluster_overview.png[link=self, window=blank, width=100%]
 
 . After 15-20 minutes the cluster deployment will be complete.
 +
